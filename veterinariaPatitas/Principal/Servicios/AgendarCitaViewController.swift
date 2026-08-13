@@ -17,34 +17,13 @@ final class AgendarCitaViewController: UIViewController {
     private var mascotas: [MascotaOpcion] = []
     private var mascotaSeleccionada: MascotaOpcion?
     private var listener: ListenerRegistration?
-    private var guardadoFinalizado = false
-    private var esperaFirestore: DispatchWorkItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = servicio
 
-        var mascotaConfiguration = UIButton.Configuration.tinted()
-        mascotaConfiguration.title = "Cargando mascotas…"
-        mascotaConfiguration.image = UIImage(systemName: "pawprint.fill")
-        mascotaConfiguration.imagePadding = 10
-        mascotaConfiguration.titleAlignment = .leading
-        mascotaConfiguration.cornerStyle = .medium
-        mascotaConfiguration.showsActivityIndicator = true
-        mascotaButton.configuration = mascotaConfiguration
-        mascotaButton.contentHorizontalAlignment = .fill
-        mascotaButton.isEnabled = false
-
-        estadoMascotasLabel.isHidden = true
-
-        fechaPicker.datePickerMode = .dateAndTime
-        fechaPicker.preferredDatePickerStyle = .compact
+        mascotaButton.configuration?.showsActivityIndicator = true
         fechaPicker.minimumDate = Date()
-
-        guardarButton.configuration?.title = "Guardar cita"
-        guardarButton.configuration?.baseBackgroundColor = .systemGreen
-        guardarButton.isEnabled = false
-        guardarButton.addTarget(self, action: #selector(guardarCita), for: .touchUpInside)
 
         escucharMascotas()
     }
@@ -115,7 +94,8 @@ final class AgendarCitaViewController: UIViewController {
                     image: UIImage(systemName: "pawprint.fill"),
                     state: mascota.id == mascotaSeleccionada?.id ? .on : .off
                 ) { [weak self] _ in
-                    self?.seleccionar(mascota)
+                    guard let self else { return }
+                    self.seleccionar(mascota)
                 }
             }
         )
@@ -141,7 +121,7 @@ final class AgendarCitaViewController: UIViewController {
         estadoMascotasLabel.isHidden = false
     }
 
-    @objc private func guardarCita() {
+    @IBAction private func guardarCita(_ sender: UIButton) {
         guard let mascota = mascotaSeleccionada else {
             presentAlert(title: "Falta información", message: "Selecciona una de tus mascotas.")
             return
@@ -151,7 +131,6 @@ final class AgendarCitaViewController: UIViewController {
             return
         }
 
-        guardadoFinalizado = false
         guardarButton.isEnabled = false
         guardarButton.configuration?.showsActivityIndicator = true
 
@@ -169,25 +148,13 @@ final class AgendarCitaViewController: UIViewController {
 
         documento.setData(datos) { [weak self] error in
             guard let self else { return }
-            self.esperaFirestore?.cancel()
-            guard !self.guardadoFinalizado else { return }
             if let error {
                 self.restaurarBotonGuardar()
                 self.presentAlert(title: "No se pudo registrar", message: error.localizedDescription)
             } else {
-                self.guardadoFinalizado = true
-                self.mostrarConfirmacion(mascota: mascota.nombre, pendiente: false)
+                self.mostrarConfirmacion(mascota: mascota.nombre)
             }
         }
-
-        let espera = DispatchWorkItem { [weak self] in
-            guard let self, !self.guardadoFinalizado else { return }
-            self.guardadoFinalizado = true
-            self.restaurarBotonGuardar()
-            self.mostrarConfirmacion(mascota: mascota.nombre, pendiente: true)
-        }
-        esperaFirestore = espera
-        DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: espera)
     }
 
     private func restaurarBotonGuardar() {
@@ -195,19 +162,17 @@ final class AgendarCitaViewController: UIViewController {
         guardarButton.configuration?.showsActivityIndicator = false
     }
 
-    private func mostrarConfirmacion(mascota: String, pendiente: Bool) {
+    private func mostrarConfirmacion(mascota: String) {
         restaurarBotonGuardar()
-        let sincronizacion = pendiente
-            ? "\nQuedó pendiente de sincronización y se enviará automáticamente cuando haya conexión."
-            : ""
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "es_PE")
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        let mensaje = "Servicio: \(servicio)\nMascota: \(mascota)\nFecha: \(formatter.string(from: fechaPicker.date))\(sincronizacion)"
+        let mensaje = "Servicio: \(servicio)\nMascota: \(mascota)\nFecha: \(formatter.string(from: fechaPicker.date))"
         let alert = UIAlertController(title: "Cita registrada", message: mensaje, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+            guard let self else { return }
+            self.navigationController?.popViewController(animated: true)
         })
         present(alert, animated: true)
     }

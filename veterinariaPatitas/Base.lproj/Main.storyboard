@@ -1,58 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="001-01-001">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--MainTabBarController-->
-        <scene sceneID="TAB-SCENE-00">
-            <objects>
-                <tabBarController storyboardIdentifier="MainTabBarController" id="001-01-001" userLabel="MainTabBarController" customClass="MainTabBarController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="004-04-004">
-                        <rect key="frame" x="0.0" y="734" width="393" height="49"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="005-05-005" kind="relationship" relationship="viewControllers" id="006-06-006"/>
-                        <segue destination="007-07-007" kind="relationship" relationship="viewControllers" id="008-08-008"/>
-                        <segue destination="009-09-009" kind="relationship" relationship="viewControllers" id="00a-0a-00a"/>
-                        <segue destination="00b-0b-00b" kind="relationship" relationship="viewControllers" id="00c-0c-00c"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="00d-0d-00d" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1400" y="0.0"/>
-        </scene>
-        <!--ServiciosNavigationController-->
-        <scene sceneID="NAV-SERV-SCENE">
-            <objects>
-                <navigationController id="005-05-005" userLabel="ServiciosNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Servicios" image="cross.case.fill" catalog="system" id="00f-0f-00f"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="010-10-010">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="011-11-011" kind="relationship" relationship="rootViewController" id="012-12-012"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="013-13-013" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-500" y="-900"/>
-        </scene>
         <!--ServiciosViewController-->
         <scene sceneID="VC-SERV-SCENE">
             <objects>
-                <tableViewController id="011-11-011" userLabel="ServiciosViewController" customClass="ServiciosViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ServiciosViewController" id="011-11-011" userLabel="ServiciosViewController" customClass="ServiciosViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" id="015-15-015">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ServicioCell" id="SERVICIO-CELL">
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="51"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SERVICIO-CELL" id="SERVICIO-CELL-CONTENT">
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="51"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CampaniasCarouselCell" rowHeight="174" id="CAMPANIAS-CELL" customClass="CampaniasCarouselCell" customModule="veterinariaPatitas" customModuleProvider="target">
+                                <rect key="frame" x="20" y="106.33333206176758" width="353" height="174"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CAMPANIAS-CELL" id="CAMPANIAS-CONTENT">
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="174"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CAMPANIAS-COLLECTION">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="152"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="12" minimumInteritemSpacing="10" id="CAMPANIAS-LAYOUT">
+                                                <size key="itemSize" width="323" height="150"/>
+                                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                <inset key="sectionInset" minX="4" minY="0.0" maxX="4" maxY="0.0"/>
+                                            </collectionViewFlowLayout>
+                                            <cells>
+                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CampaniaCardCell" id="CAMPANIA-BANNER-CELL" customClass="CampaniaCardCell" customModule="veterinariaPatitas" customModuleProvider="target">
+                                                    <rect key="frame" x="4" y="1" width="323" height="150"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="CAMPANIA-BANNER-CONTENT">
+                                                        <rect key="frame" x="0.0" y="0.0" width="323" height="150"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="CAMPANIA-BANNER-IMAGE">
+                                                                <rect key="frame" x="0.0" y="0.0" width="323" height="150"/>
+                                                            </imageView>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="CAMPANIA-BANNER-IMAGE" secondAttribute="bottom" id="CAMPANIA-IMAGE-BOTTOM"/>
+                                                            <constraint firstItem="CAMPANIA-BANNER-IMAGE" firstAttribute="leading" secondItem="CAMPANIA-BANNER-CONTENT" secondAttribute="leading" id="CAMPANIA-IMAGE-LEAD"/>
+                                                            <constraint firstItem="CAMPANIA-BANNER-IMAGE" firstAttribute="top" secondItem="CAMPANIA-BANNER-CONTENT" secondAttribute="top" id="CAMPANIA-IMAGE-TOP"/>
+                                                            <constraint firstAttribute="trailing" secondItem="CAMPANIA-BANNER-IMAGE" secondAttribute="trailing" id="CAMPANIA-IMAGE-TRAIL"/>
+                                                        </constraints>
+                                                    </collectionViewCellContentView>
+                                                    <connections>
+                                                        <outlet property="bannerImageView" destination="CAMPANIA-BANNER-IMAGE" id="CAMPANIA-IMAGE-OUT"/>
+                                                    </connections>
+                                                </collectionViewCell>
+                                            </cells>
+                                            <connections>
+                                                <outlet property="dataSource" destination="CAMPANIAS-CELL" id="CAMPANIAS-DATA-OUT"/>
+                                                <outlet property="delegate" destination="CAMPANIAS-CELL" id="CAMPANIAS-DELEGATE-OUT"/>
+                                            </connections>
+                                        </collectionView>
+                                        <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="CAMPANIAS-PAGE">
+                                            <rect key="frame" x="140" y="152" width="73" height="20"/>
+                                            <color key="pageIndicatorTintColor" systemColor="systemGray4Color"/>
+                                            <color key="currentPageIndicatorTintColor" systemColor="systemGreenColor"/>
+                                        </pageControl>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="CAMPANIAS-COLLECTION" firstAttribute="leading" secondItem="CAMPANIAS-CONTENT" secondAttribute="leading" id="CAMPANIAS-COLLECTION-LEAD"/>
+                                        <constraint firstItem="CAMPANIAS-COLLECTION" firstAttribute="top" secondItem="CAMPANIAS-CONTENT" secondAttribute="top" id="CAMPANIAS-COLLECTION-TOP"/>
+                                        <constraint firstAttribute="trailing" secondItem="CAMPANIAS-COLLECTION" secondAttribute="trailing" id="CAMPANIAS-COLLECTION-TRAIL"/>
+                                        <constraint firstAttribute="bottom" secondItem="CAMPANIAS-PAGE" secondAttribute="bottom" constant="2" id="CAMPANIAS-PAGE-BOTTOM"/>
+                                        <constraint firstItem="CAMPANIAS-PAGE" firstAttribute="height" constant="20" id="CAMPANIAS-PAGE-H"/>
+                                        <constraint firstItem="CAMPANIAS-PAGE" firstAttribute="top" secondItem="CAMPANIAS-COLLECTION" secondAttribute="bottom" id="CAMPANIAS-PAGE-TOP"/>
+                                        <constraint firstItem="CAMPANIAS-PAGE" firstAttribute="centerX" secondItem="CAMPANIAS-CONTENT" secondAttribute="centerX" id="CAMPANIAS-PAGE-X"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="collectionView" destination="CAMPANIAS-COLLECTION" id="CAMPANIAS-COLLECTION-OUT"/>
+                                    <outlet property="pageControl" destination="CAMPANIAS-PAGE" id="CAMPANIAS-PAGE-OUT"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="011-11-011" id="017-17-017"/>
                             <outlet property="delegate" destination="011-11-011" id="019-19-019"/>
@@ -65,29 +105,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="01b-1b-01b" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="350" y="-900"/>
-        </scene>
-        <!--AdopcionNavigationController-->
-        <scene sceneID="NAV-ADOP-SCENE">
-            <objects>
-                <navigationController id="007-07-007" userLabel="AdopcionNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Adopción" image="heart.fill" catalog="system" id="01d-1d-01d"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="01e-1e-01e">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="01f-1f-01f" kind="relationship" relationship="rootViewController" id="020-20-020"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="021-21-021" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-500" y="-240"/>
+            <point key="canvasLocation" x="-1758" y="-708"/>
         </scene>
         <!--AdopcionViewController-->
         <scene sceneID="VC-ADOP-SCENE">
             <objects>
-                <tableViewController id="01f-1f-01f" userLabel="AdopcionViewController" customClass="AdopcionViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AdopcionViewController" id="01f-1f-01f" userLabel="AdopcionViewController" customClass="AdopcionViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" id="023-23-023">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -104,46 +127,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="029-29-029" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="349" y="-240"/>
-        </scene>
-        <!--PeluchesNavigationController-->
-        <scene sceneID="NAV-PLAY-SCENE">
-            <objects>
-                <navigationController id="009-09-009" userLabel="PeluchesNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Peluches" image="speaker.wave.2.fill" catalog="system" id="02b-2b-02b"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="02c-2c-02c">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="PLUSHIES-VC" kind="relationship" relationship="rootViewController" id="02e-2e-02e"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="02f-2f-02f" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-500" y="420"/>
-        </scene>
-        <!--MiCuentaNavigationController-->
-        <scene sceneID="NAV-ACCT-SCENE">
-            <objects>
-                <navigationController id="00b-0b-00b" userLabel="MiCuentaNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Mi cuenta" image="person.crop.circle.fill" catalog="system" id="036-36-036"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="037-37-037">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="038-38-038" kind="relationship" relationship="rootViewController" id="039-39-039"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="03a-3a-03a" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1401" y="759"/>
+            <point key="canvasLocation" x="-1709" y="-19"/>
         </scene>
         <!--MiCuentaViewController-->
         <scene sceneID="VC-ACCT-SCENE">
             <objects>
-                <tableViewController id="038-38-038" userLabel="MiCuentaViewController" customClass="MiCuentaViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MiCuentaViewController" id="038-38-038" userLabel="MiCuentaViewController" customClass="MiCuentaViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" id="03c-3c-03c">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -163,44 +152,49 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="042-42-042" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1401" y="1514"/>
+            <point key="canvasLocation" x="266" y="7"/>
         </scene>
         <!--AgendarCitaViewController-->
         <scene sceneID="BOOKING-SCENE">
             <objects>
                 <viewController id="BOOKING-VC" userLabel="AgendarCitaViewController" customClass="AgendarCitaViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BOOKING-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-STACK">
-                                <rect key="frame" x="16" y="204" width="361" height="1198"/>
+                                <rect key="frame" x="16" y="91" width="361" height="1166.3333333333333"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Mascota" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-PET-LABEL">
                                         <rect key="frame" x="0.0" y="0.0" width="361" height="20.333333333333332"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-PET-BUTTON">
-                                        <rect key="frame" x="0.0" y="36.333333333333343" width="361" height="48"/>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-PET-BUTTON">
+                                        <rect key="frame" x="0.0" y="36.333333333333329" width="361" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="BOOKING-PET-H"/>
                                         </constraints>
                                         <buttonConfiguration key="configuration" style="tinted" image="pawprint.fill" catalog="system" title="Cargando mascotas…"/>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Estado de mascotas" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-STATUS">
-                                        <rect key="frame" x="0.0" y="100.33333333333331" width="361" height="15.666666666666671"/>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Estado de mascotas" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-STATUS">
+                                        <rect key="frame" x="0.0" y="92.333333333333343" width="361" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-DATE">
-                                        <rect key="frame" x="0.0" y="132" width="361" height="1000"/>
+                                        <rect key="frame" x="0.0" y="100.33333333333337" width="361" height="1000.0000000000001"/>
                                     </datePicker>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-SAVE">
-                                        <rect key="frame" x="0.0" y="1148" width="361" height="50"/>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-SAVE">
+                                        <rect key="frame" x="0.0" y="1116.3333333333333" width="361" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="BOOKING-SAVE-H"/>
                                         </constraints>
-                                        <buttonConfiguration key="configuration" style="filled" title="Guardar cita"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Guardar cita">
+                                            <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="guardarCita:" destination="BOOKING-VC" eventType="touchUpInside" id="BOOKING-SAVE-ACTION"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -223,32 +217,42 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BOOKING-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1250" y="-900"/>
+            <point key="canvasLocation" x="-857" y="-708"/>
         </scene>
         <!--AdopcionDetalleViewController-->
         <scene sceneID="ADOP-DETAIL-SCENE">
             <objects>
                 <viewController id="ADOP-DETAIL-VC" userLabel="AdopcionDetalleViewController" customClass="AdopcionDetalleViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ADOP-DETAIL-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="ADOP-DETAIL-STACK">
-                                <rect key="frame" x="16" y="196.00000000000003" width="361" height="354.66666666666674"/>
+                                <rect key="frame" x="16" y="83.000000000000028" width="361" height="354.66666666666674"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ADOP-DETAIL-IMAGE">
                                         <rect key="frame" x="0.0" y="0.0" width="361" height="260"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="260" id="ADOP-DETAIL-IMAGE-H"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Información de la mascota" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADOP-DETAIL-LABEL">
                                         <rect key="frame" x="0.0" y="280" width="361" height="20.333333333333314"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADOP-DETAIL-BUTTON">
-                                        <rect key="frame" x="0.0" y="320.33333333333337" width="361" height="34.333333333333314"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Solicitar adopción"/>
+                                        <rect key="frame" x="0.0" y="320.33333333333331" width="361" height="34.333333333333314"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Solicitar adopción">
+                                            <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="solicitarAdopcion:" destination="ADOP-DETAIL-VC" eventType="touchUpInside" id="ADOP-DETAIL-ACTION"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -270,49 +274,49 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ADOP-DETAIL-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1202" y="-240"/>
+            <point key="canvasLocation" x="-857" y="-19"/>
         </scene>
         <!--PeluchesSonorosViewController-->
         <scene sceneID="PLUSHIES-SCENE">
             <objects>
-                <viewController id="PLUSHIES-VC" userLabel="PeluchesSonorosViewController" customClass="PeluchesSonorosViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PeluchesSonorosViewController" id="PLUSHIES-VC" userLabel="PeluchesSonorosViewController" customClass="PeluchesSonorosViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PLUSHIES-VIEW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIES-STACK">
-                                <rect key="frame" x="16" y="196" width="361" height="515"/>
+                                <rect key="frame" x="16" y="142" width="361" height="618"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-1-BUTTON">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="116.66666666666667"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="bird.fill" catalog="system" imagePlacement="top" title="Patito" imagePadding="12">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="142.66666666666666"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="pawprint.fill" catalog="system" imagePlacement="top" title="Perro" imagePadding="12">
                                             <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="playSound:" destination="PLUSHIES-VC" eventType="touchUpInside" id="PLUSHIE-1-ACTION"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-2-BUTTON">
-                                        <rect key="frame" x="0.0" y="132.66666666666669" width="361" height="117"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="hare.fill" catalog="system" imagePlacement="top" title="Cerdito" imagePadding="12">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-2-BUTTON">
+                                        <rect key="frame" x="0.0" y="158.66666666666669" width="361" height="142.33333333333331"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="cat.fill" catalog="system" imagePlacement="top" title="Gato" imagePadding="12">
                                             <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="playSound:" destination="PLUSHIES-VC" eventType="touchUpInside" id="PLUSHIE-2-ACTION"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-3-BUTTON">
-                                        <rect key="frame" x="0.0" y="265.66666666666669" width="361" height="116.66666666666669"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="circle.fill" catalog="system" imagePlacement="top" title="Pelota" imagePadding="12">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-3-BUTTON">
+                                        <rect key="frame" x="0.0" y="317" width="361" height="142.66666666666663"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="hare.fill" catalog="system" imagePlacement="top" title="Conejo" imagePadding="12">
                                             <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="playSound:" destination="PLUSHIES-VC" eventType="touchUpInside" id="PLUSHIE-3-ACTION"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-4-BUTTON">
-                                        <rect key="frame" x="0.0" y="398.33333333333337" width="361" height="116.66666666666663"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="bell.fill" catalog="system" imagePlacement="top" title="Campana" imagePadding="12">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLUSHIE-4-BUTTON">
+                                        <rect key="frame" x="0.0" y="475.66666666666657" width="361" height="142.33333333333331"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="teddybear.fill" catalog="system" imagePlacement="top" title="Oso" imagePadding="12">
                                             <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
                                         </buttonConfiguration>
                                         <connections>
@@ -335,29 +339,33 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PLUSHIES-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="349" y="420"/>
+            <point key="canvasLocation" x="-1709" y="641"/>
         </scene>
         <!--MisMascotasViewController-->
         <scene sceneID="PETS-SCENE">
             <objects>
                 <viewController id="PETS-VC" userLabel="MisMascotasViewController" customClass="MisMascotasViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PETS-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" rowHeight="-1" estimatedRowHeight="68" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="PETS-TABLE">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="PETS-VC" id="PETS-DATA-OUT"/>
+                                    <outlet property="delegate" destination="PETS-VC" id="PETS-DELEGATE-OUT"/>
+                                </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="PETS-EMPTY">
-                                <rect key="frame" x="16" y="405.66666666666669" width="361" height="40.666666666666686"/>
+                                <rect key="frame" x="16" y="376.33333333333331" width="361" height="40.666666666666686"/>
                                 <string key="text">Aún no tienes mascotas registradas.
 Toca + para agregar la primera.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="PETS-LOADING">
-                                <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="178" y="378" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PETS-SAFE"/>
@@ -383,27 +391,31 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PETS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-415" y="1243"/>
+            <point key="canvasLocation" x="265" y="-708"/>
         </scene>
         <!--MisCitasViewController-->
         <scene sceneID="APPOINTMENTS-SCENE">
             <objects>
                 <viewController id="APPOINTMENTS-VC" userLabel="MisCitasViewController" customClass="MisCitasViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="APPOINTMENTS-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" rowHeight="-1" estimatedRowHeight="68" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="APPOINTMENTS-TABLE">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="APPOINTMENTS-VC" id="APPOINTMENTS-DATA-OUT"/>
+                                    <outlet property="delegate" destination="APPOINTMENTS-VC" id="APPOINTMENTS-DELEGATE-OUT"/>
+                                </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Aún no tienes citas registradas." textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="APPOINTMENTS-EMPTY">
-                                <rect key="frame" x="16" y="416" width="361" height="20.333333333333314"/>
+                                <rect key="frame" x="16" y="386.33333333333331" width="361" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="APPOINTMENTS-LOADING">
-                                <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="178" y="378" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="APPOINTMENTS-SAFE"/>
@@ -429,27 +441,31 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="APPOINTMENTS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1401" y="2277"/>
+            <point key="canvasLocation" x="265" y="770"/>
         </scene>
         <!--SolicitudesAdopcionViewController-->
         <scene sceneID="REQUESTS-SCENE">
             <objects>
                 <viewController id="REQUESTS-VC" userLabel="SolicitudesAdopcionViewController" customClass="SolicitudesAdopcionViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="REQUESTS-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" rowHeight="-1" estimatedRowHeight="82" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="REQUESTS-TABLE">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="REQUESTS-VC" id="REQUESTS-DATA-OUT"/>
+                                    <outlet property="delegate" destination="REQUESTS-VC" id="REQUESTS-DELEGATE-OUT"/>
+                                </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Aún no tienes solicitudes de adopción." textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="REQUESTS-EMPTY">
-                                <rect key="frame" x="16" y="416" width="361" height="20.333333333333314"/>
+                                <rect key="frame" x="16" y="386.33333333333331" width="361" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="REQUESTS-LOADING">
-                                <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="178" y="378" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="REQUESTS-SAFE"/>
@@ -475,34 +491,18 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="REQUESTS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-633" y="2277"/>
-        </scene>
-        <!--AuthNavigationController-->
-        <scene sceneID="AUTH-NAV-SCENE">
-            <objects>
-                <navigationController storyboardIdentifier="AuthNavigationController" id="AUTH-NAV-VC" userLabel="AuthNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="AUTH-NAV-BAR">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="AUTH-LOGIN-VC" kind="relationship" relationship="rootViewController" id="AUTH-NAV-ROOT-SEGUE"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AUTH-NAV-FIRST" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3734" y="-771"/>
+            <point key="canvasLocation" x="1285" y="404"/>
         </scene>
         <!--LoginViewController-->
         <scene sceneID="AUTH-LOGIN-SCENE">
             <objects>
-                <viewController id="AUTH-LOGIN-VC" userLabel="LoginViewController" customClass="LoginViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="AUTH-LOGIN-VC" userLabel="LoginViewController" customClass="LoginViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AUTH-LOGIN-VIEW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-STACK">
-                                <rect key="frame" x="24" y="217.33333333333326" width="345" height="461.66666666666674"/>
+                                <rect key="frame" x="24" y="190.33333333333334" width="345" height="461.66666666666663"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="patitas_1_4 2.png" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-LOGO">
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="104"/>
@@ -511,16 +511,16 @@ Toca + para agregar la primera.</string>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Bienvenido a Patitas" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-TITLE">
-                                        <rect key="frame" x="0.0" y="0.0" width="345" height="33.666666666666664"/>
+                                        <rect key="frame" x="0.0" y="119.99999999999999" width="345" height="33.666666666666671"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Inicia sesión para gestionar tus mascotas y citas" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-SUBTITLE">
-                                        <rect key="frame" x="0.0" y="49.666666666666686" width="345" height="18"/>
+                                        <rect key="frame" x="0.0" y="169.66666666666666" width="345" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="nombre@correo.com" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-EMAIL">
-                                        <rect key="frame" x="0.0" y="83.666666666666686" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="203.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-LOGIN-EMAIL-H"/>
                                         </constraints>
@@ -528,7 +528,7 @@ Toca + para agregar la primera.</string>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-PASS" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="143.66666666666669" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="263.66666666666663" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-LOGIN-PASS-H"/>
                                         </constraints>
@@ -536,7 +536,7 @@ Toca + para agregar la primera.</string>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-BUTTON">
-                                        <rect key="frame" x="0.0" y="203.66666666666669" width="345" height="46"/>
+                                        <rect key="frame" x="0.0" y="323.66666666666663" width="345" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="46" id="AUTH-LOGIN-BUTTON-H"/>
                                         </constraints>
@@ -547,17 +547,17 @@ Toca + para agregar la primera.</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-LINK">
-                                        <rect key="frame" x="0.0" y="265.66666666666669" width="345" height="30"/>
+                                        <rect key="frame" x="0.0" y="385.66666666666663" width="345" height="30"/>
                                         <state key="normal" title="Crear una cuenta"/>
                                         <connections>
-                                            <segue destination="AUTH-REGISTER-VC" kind="show" id="AUTH-REGISTER-SEGUE"/>
+                                            <segue destination="AUTH-REGISTER-VC" kind="presentation" id="AUTH-REGISTER-SEGUE"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-RESET-LINK">
-                                        <rect key="frame" x="0.0" y="311.66666666666669" width="345" height="30"/>
+                                        <rect key="frame" x="0.0" y="431.66666666666663" width="345" height="30"/>
                                         <state key="normal" title="¿Olvidaste tu contraseña?"/>
                                         <connections>
-                                            <segue destination="AUTH-RESET-VC" kind="show" id="AUTH-RESET-SEGUE"/>
+                                            <segue destination="AUTH-RESET-VC" kind="presentation" id="AUTH-RESET-SEGUE"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -587,50 +587,50 @@ Toca + para agregar la primera.</string>
             <objects>
                 <viewController id="AUTH-REGISTER-VC" userLabel="RegistroViewController" customClass="RegistroViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AUTH-REGISTER-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-STACK">
-                                <rect key="frame" x="24" y="280.33333333333326" width="345" height="335.66666666666674"/>
+                                <rect key="frame" x="24" y="228.33333333333334" width="345" height="335.66666666666663"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Crea tu cuenta" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-TITLE">
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="33.666666666666664"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-NAME">
-                                        <rect key="frame" x="0.0" y="49.666666666666686" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="49.666666666666657" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-NAME-H"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" textContentType="name"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="nombre@correo.com" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-EMAIL">
-                                        <rect key="frame" x="0.0" y="109.66666666666669" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="109.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-EMAIL-H"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next" textContentType="emailAddress"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña (mínimo 6 caracteres)" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-PASS" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="169.66666666666669" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="169.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-PASS-H"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="newPassword"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-CONFIRM" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="229.66666666666669" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="229.66666666666666" width="345" height="43.999999999999972"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-CONFIRM-H"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" textContentType="newPassword"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-BUTTON">
-                                        <rect key="frame" x="0.0" y="289.66666666666669" width="345" height="46"/>
+                                        <rect key="frame" x="0.0" y="289.66666666666663" width="345" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="46" id="AUTH-REGISTER-BUTTON-H"/>
                                         </constraints>
@@ -669,11 +669,11 @@ Toca + para agregar la primera.</string>
             <objects>
                 <viewController id="AUTH-RESET-VC" userLabel="RecuperarPasswordViewController" customClass="RecuperarPasswordViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AUTH-RESET-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-RESET-STACK">
-                                <rect key="frame" x="24" y="344.33333333333331" width="345" height="187.33333333333331"/>
+                                <rect key="frame" x="24" y="292.33333333333331" width="345" height="187.33333333333331"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Recupera tu contraseña" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-RESET-TITLE">
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="31.333333333333332"/>
@@ -729,18 +729,18 @@ Toca + para agregar la primera.</string>
             <objects>
                 <viewController id="AUTH-CHANGE-VC" userLabel="CambiarPasswordViewController" customClass="CambiarPasswordViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AUTH-CHANGE-VIEW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-STACK">
-                                <rect key="frame" x="24" y="275.66666666666663" width="345" height="275.66666666666663"/>
+                                <rect key="frame" x="24" y="248.33333333333334" width="345" height="275.66666666666663"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Cambiar contraseña" textAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-TITLE">
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="33.666666666666664"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                     </label>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña actual" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CURRENT" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="49.666666666666629" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="49.666666666666657" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-CURRENT-H"/>
                                         </constraints>
@@ -748,7 +748,7 @@ Toca + para agregar la primera.</string>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-NEW" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="109.66666666666663" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="109.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-NEW-H"/>
                                         </constraints>
@@ -756,7 +756,7 @@ Toca + para agregar la primera.</string>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CONFIRM" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="169.66666666666663" width="345" height="44"/>
+                                        <rect key="frame" x="0.0" y="169.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-CONFIRM-H"/>
                                         </constraints>
@@ -764,7 +764,7 @@ Toca + para agregar la primera.</string>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-BUTTON">
-                                        <rect key="frame" x="0.0" y="229.66666666666663" width="345" height="46"/>
+                                        <rect key="frame" x="0.0" y="229.66666666666666" width="345" height="45.999999999999972"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="46" id="AUTH-CHANGE-BUTTON-H"/>
                                         </constraints>
@@ -795,25 +795,23 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AUTH-CHANGE-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="312" y="1825"/>
+            <point key="canvasLocation" x="1286" y="-436"/>
         </scene>
     </scenes>
     <resources>
-        <image name="bell.fill" catalog="system" width="123" height="128"/>
-        <image name="bird.fill" catalog="system" width="126" height="128"/>
-        <image name="circle.fill" catalog="system" width="128" height="123"/>
-        <image name="cross.case.fill" catalog="system" width="128" height="100"/>
+        <image name="cat.fill" catalog="system" width="128" height="102"/>
         <image name="hare.fill" catalog="system" width="128" height="88"/>
-        <image name="heart.fill" catalog="system" width="128" height="107"/>
-        <image name="pawprint.fill" catalog="system" width="128" height="112"/>
-        <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <image name="patitas_1_4 2.png" width="207" height="90"/>
-        <image name="speaker.wave.2.fill" catalog="system" width="128" height="88"/>
+        <image name="pawprint.fill" catalog="system" width="128" height="112"/>
+        <image name="teddybear.fill" catalog="system" width="126" height="128"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

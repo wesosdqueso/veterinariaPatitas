@@ -7,23 +7,15 @@ final class AdopcionDetalleViewController: UIViewController {
     @IBOutlet private weak var mascotaImageView: UIImageView!
     @IBOutlet private weak var detallesLabel: UILabel!
     @IBOutlet private weak var solicitarButton: UIButton!
-    private var solicitudFinalizada = false
-    private var esperaFirestore: DispatchWorkItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = mascota.nombre
         mascotaImageView.image = UIImage(named: mascota.imagenNombre)
-        mascotaImageView.layer.cornerRadius = 20
         detallesLabel.text = mascota.detalles
-
-        solicitarButton.configuration?.title = "Solicitar adopción"
-        solicitarButton.configuration?.baseBackgroundColor = .systemGreen
-        solicitarButton.addTarget(self, action: #selector(solicitarAdopcion), for: .touchUpInside)
-
     }
 
-    @objc private func solicitarAdopcion() {
+    @IBAction private func solicitarAdopcion(_ sender: UIButton) {
         guard let usuario = Auth.auth().currentUser else {
             mostrarAlerta(titulo: "Sesión finalizada", mensaje: "Vuelve a iniciar sesión para enviar la solicitud.")
             return
@@ -57,7 +49,8 @@ final class AdopcionDetalleViewController: UIViewController {
                     preferredStyle: .alert
                 )
                 alerta.addAction(UIAlertAction(title: "Corregir", style: .default) { [weak self] _ in
-                    self?.mostrarFormularioContacto(usuario: usuario, telefonoInicial: telefono)
+                    guard let self else { return }
+                    self.mostrarFormularioContacto(usuario: usuario, telefonoInicial: telefono)
                 })
                 self.present(alerta, animated: true)
                 return
@@ -68,7 +61,6 @@ final class AdopcionDetalleViewController: UIViewController {
     }
 
     private func guardarSolicitud(usuario: User, telefono: String) {
-        solicitudFinalizada = false
         solicitarButton.isEnabled = false
         solicitarButton.configuration?.showsActivityIndicator = true
 
@@ -89,24 +81,13 @@ final class AdopcionDetalleViewController: UIViewController {
 
         referencia.setData(datos) { [weak self] error in
             guard let self else { return }
-            self.esperaFirestore?.cancel()
-            guard !self.solicitudFinalizada else { return }
             if let error {
                 self.restaurarBoton()
                 self.mostrarAlerta(titulo: "No se pudo enviar", mensaje: error.localizedDescription)
             } else {
-                self.solicitudFinalizada = true
-                self.mostrarExito(pendiente: false)
+                self.mostrarExito()
             }
         }
-
-        let espera = DispatchWorkItem { [weak self] in
-            guard let self, !self.solicitudFinalizada else { return }
-            self.solicitudFinalizada = true
-            self.mostrarExito(pendiente: true)
-        }
-        esperaFirestore = espera
-        DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: espera)
     }
 
     private func restaurarBoton() {
@@ -114,16 +95,16 @@ final class AdopcionDetalleViewController: UIViewController {
         solicitarButton.configuration?.showsActivityIndicator = false
     }
 
-    private func mostrarExito(pendiente: Bool) {
+    private func mostrarExito() {
         restaurarBoton()
-        let extra = pendiente ? " Se sincronizará automáticamente cuando haya conexión." : ""
         let alerta = UIAlertController(
             title: "Solicitud enviada",
-            message: "Registramos tu interés en adoptar a \(mascota.nombre). Puedes consultar el estado desde Mi cuenta → Solicitudes de adopción.\(extra)",
+            message: "Registramos tu interés en adoptar a \(mascota.nombre). Puedes consultar el estado desde Mi cuenta → Solicitudes de adopción.",
             preferredStyle: .alert
         )
         alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+            guard let self else { return }
+            self.navigationController?.popViewController(animated: true)
         })
         present(alerta, animated: true)
     }

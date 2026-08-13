@@ -19,12 +19,7 @@ final class SolicitudesAdopcionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Solicitudes"
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SolicitudCell")
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 82
         escucharSolicitudes()
     }
 
@@ -76,10 +71,12 @@ final class SolicitudesAdopcionViewController: UIViewController {
         )
         alerta.addAction(UIAlertAction(title: "Conservar", style: .cancel))
         alerta.addAction(UIAlertAction(title: "Cancelar solicitud", style: .destructive) { [weak self] _ in
+            guard let self else { return }
             Firestore.firestore().collection("usuarios").document(uid)
                 .collection("solicitudesAdopcion").document(solicitud.id)
-                .updateData(["estado": "Cancelada"]) { error in
-                    if let error { self?.mostrarError(error.localizedDescription) }
+                .updateData(["estado": "Cancelada"]) { [weak self] error in
+                    guard let self else { return }
+                    if let error { self.mostrarError(error.localizedDescription) }
                 }
         })
         present(alerta, animated: true)
@@ -116,7 +113,11 @@ extension SolicitudesAdopcionViewController: UITableViewDataSource, UITableViewD
         let solicitud = solicitudes[indexPath.row]
         guard solicitud.estado == "Pendiente" else { return nil }
         let accion = UIContextualAction(style: .destructive, title: "Cancelar") { [weak self] _, _, completion in
-            self?.confirmarCancelacion(solicitud)
+            guard let self else {
+                completion(false)
+                return
+            }
+            self.confirmarCancelacion(solicitud)
             completion(true)
         }
         accion.image = UIImage(systemName: "xmark.circle")

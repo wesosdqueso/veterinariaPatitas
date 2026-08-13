@@ -16,15 +16,17 @@ final class MisCitasViewController: UIViewController {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     private var citas: [Cita] = []
     private var listener: ListenerRegistration?
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_PE")
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Mis citas"
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CitaCell")
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 68
 
         escucharCitas()
     }
@@ -79,9 +81,11 @@ final class MisCitasViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "Conservar", style: .cancel))
         alert.addAction(UIAlertAction(title: "Cancelar cita", style: .destructive) { [weak self] _ in
+            guard let self else { return }
             Firestore.firestore().collection("usuarios").document(uid).collection("citas")
-                .document(cita.id).updateData(["estado": "Cancelada"]) { error in
-                    if let error { self?.mostrarError(error.localizedDescription) }
+                .document(cita.id).updateData(["estado": "Cancelada"]) { [weak self] error in
+                    guard let self else { return }
+                    if let error { self.mostrarError(error.localizedDescription) }
                 }
         })
         present(alert, animated: true)
@@ -104,11 +108,7 @@ extension MisCitasViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CitaCell", for: indexPath)
         var content = cell.defaultContentConfiguration()
         content.text = cita.servicio
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "es_PE")
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        content.secondaryText = "\(cita.mascota) · \(formatter.string(from: cita.fecha)) · \(cita.estado)"
+        content.secondaryText = "\(cita.mascota) · \(Self.dateFormatter.string(from: cita.fecha)) · \(cita.estado)"
         content.secondaryTextProperties.numberOfLines = 0
         content.image = UIImage(systemName: cita.estado == "Cancelada" ? "calendar.badge.minus" : "calendar.badge.clock")
         content.imageProperties.tintColor = cita.estado == "Cancelada" ? .systemRed : .systemGreen
@@ -121,7 +121,11 @@ extension MisCitasViewController: UITableViewDataSource, UITableViewDelegate {
         let cita = citas[indexPath.row]
         guard cita.estado != "Cancelada", cita.fecha > Date() else { return nil }
         let accion = UIContextualAction(style: .destructive, title: "Cancelar") { [weak self] _, _, completion in
-            self?.cancelar(cita)
+            guard let self else {
+                completion(false)
+                return
+            }
+            self.cancelar(cita)
             completion(true)
         }
         accion.image = UIImage(systemName: "calendar.badge.minus")

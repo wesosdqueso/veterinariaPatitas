@@ -8,7 +8,6 @@ private struct Mascota {
     let especie: String
     let raza: String
     let sexo: String
-    let fechaNacimiento: Date
     let peso: Double?
 
     init?(document: QueryDocumentSnapshot) {
@@ -16,14 +15,12 @@ private struct Mascota {
         guard let nombre = data["nombre"] as? String,
               let especie = data["especie"] as? String,
               let raza = data["raza"] as? String,
-              let sexo = data["sexo"] as? String,
-              let fecha = data["fechaNacimiento"] as? Timestamp else { return nil }
+              let sexo = data["sexo"] as? String else { return nil }
         id = document.documentID
         self.nombre = nombre
         self.especie = especie
         self.raza = raza
         self.sexo = sexo
-        fechaNacimiento = fecha.dateValue()
         peso = data["peso"] as? Double
     }
 }
@@ -37,18 +34,13 @@ final class MisMascotasViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Mis mascotas"
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
             action: #selector(registrarMascota)
         )
 
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MascotaCell")
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 68
         escucharMascotas()
     }
 
@@ -120,7 +112,11 @@ extension MisMascotasViewController: UITableViewDataSource, UITableViewDelegate 
                 return
             }
             Firestore.firestore().collection("usuarios").document(uid).collection("mascotas")
-                .document(mascota.id).delete { error in
+                .document(mascota.id).delete { [weak self] error in
+                    guard let self else {
+                        completion(false)
+                        return
+                    }
                     if let error { self.mostrarError(error.localizedDescription) }
                     completion(error == nil)
                 }
@@ -138,8 +134,6 @@ final class RegistrarMascotaViewController: UIViewController {
     private let nacimientoPicker = UIDatePicker()
     private let pesoField = UITextField()
     private let guardarButton = UIButton(configuration: .filled())
-    private var guardadoFinalizado = false
-    private var esperaFirestore: DispatchWorkItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -239,38 +233,14 @@ final class RegistrarMascotaViewController: UIViewController {
         Firestore.firestore().collection("usuarios").document(uid).collection("mascotas")
             .addDocument(data: datos) { [weak self] error in
                 guard let self else { return }
-                self.esperaFirestore?.cancel()
-                guard !self.guardadoFinalizado else { return }
                 self.guardarButton.isEnabled = true
                 self.guardarButton.configuration?.showsActivityIndicator = false
                 if let error {
                     self.mostrarValidacion("No se pudo guardar la mascota. \(error.localizedDescription)")
                 } else {
-                    self.guardadoFinalizado = true
                     self.navigationController?.popViewController(animated: true)
                 }
             }
-
-        // Firestore mantiene las escrituras en cola cuando no hay conexión y no llama
-        // al completion hasta recibir confirmación del servidor. Evitamos dejar al
-        // usuario atrapado en un spinner aunque el registro ya esté guardado localmente.
-        let espera = DispatchWorkItem { [weak self] in
-            guard let self, !self.guardadoFinalizado else { return }
-            self.guardadoFinalizado = true
-            self.guardarButton.isEnabled = true
-            self.guardarButton.configuration?.showsActivityIndicator = false
-            let alerta = UIAlertController(
-                title: "Mascota guardada",
-                message: "El registro quedó pendiente de sincronización y se enviará automáticamente cuando Firebase tenga conexión.",
-                preferredStyle: .alert
-            )
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                self?.navigationController?.popViewController(animated: true)
-            })
-            self.present(alerta, animated: true)
-        }
-        esperaFirestore = espera
-        DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: espera)
     }
 
     private func mostrarValidacion(_ mensaje: String, campo: UITextField? = nil) {

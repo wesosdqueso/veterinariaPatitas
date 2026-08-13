@@ -8,20 +8,36 @@ final class RecuperarPasswordViewController: UIViewController {
     @IBAction private func enviarRecuperacion(_ sender: UIButton) {
         let correo = correoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !correo.isEmpty else {
-            mostrarMensaje("Falta el correo", "Ingresa el correo de tu cuenta.", enfocar: correoTextField)
+            let alerta = UIAlertController(title: "Falta el correo", message: "Ingresa el correo de tu cuenta.", preferredStyle: .alert)
+            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
+                guard let self else { return }
+                self.correoTextField.becomeFirstResponder()
+            })
+            present(alerta, animated: true)
             return
         }
 
-        cambiarCarga(true, boton: enviarButton)
+        enviarButton.isEnabled = false
+        enviarButton.configuration?.showsActivityIndicator = true
+        view.isUserInteractionEnabled = false
         Auth.auth().sendPasswordReset(withEmail: correo) { [weak self] error in
             guard let self else { return }
-            self.cambiarCarga(false, boton: self.enviarButton)
+            self.enviarButton.isEnabled = true
+            self.enviarButton.configuration?.showsActivityIndicator = false
+            self.view.isUserInteractionEnabled = true
             if let error {
-                self.mostrarErrorFirebase(
-                    error,
-                    titulo: "No se pudo enviar",
-                    campoCorreo: self.correoTextField
+                let correoInvalido = AuthErrorCode(rawValue: (error as NSError).code) == .invalidEmail
+                let alerta = UIAlertController(
+                    title: "No se pudo enviar",
+                    message: MensajeErrorFirebase.texto(para: error),
+                    preferredStyle: .alert
                 )
+                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
+                    guard let self, correoInvalido else { return }
+                    self.correoTextField.becomeFirstResponder()
+                    self.correoTextField.selectAll(nil)
+                })
+                self.present(alerta, animated: true)
                 return
             }
             let alerta = UIAlertController(
@@ -30,7 +46,8 @@ final class RecuperarPasswordViewController: UIViewController {
                 preferredStyle: .alert
             )
             alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                self?.navigationController?.popViewController(animated: true)
+                guard let self else { return }
+                self.dismiss(animated: true)
             })
             self.present(alerta, animated: true)
         }

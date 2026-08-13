@@ -10,7 +10,6 @@ final class MiCuentaViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Mi cuenta"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CuentaCell")
     }
 
@@ -84,7 +83,8 @@ final class MiCuentaViewController: UITableViewController {
     private func cerrarSesion() {
         do {
             try Auth.auth().signOut()
-            AppFlow.showAuthentication()
+            let sceneDelegate = view.window?.windowScene?.delegate as! SceneDelegate
+            sceneDelegate.mostrarLogin()
         } catch {
             let alerta = UIAlertController(title: "No se pudo cerrar sesión", message: error.localizedDescription, preferredStyle: .alert)
             alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))

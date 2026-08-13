@@ -10,27 +10,49 @@ final class LoginViewController: UIViewController {
         let correo = correoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text ?? ""
         guard !correo.isEmpty else {
-            mostrarMensaje("Faltan datos", "Ingresa tu correo.", enfocar: correoTextField)
+            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu correo.", preferredStyle: .alert)
+            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
+                guard let self else { return }
+                self.correoTextField.becomeFirstResponder()
+            })
+            present(alerta, animated: true)
             return
         }
         guard !password.isEmpty else {
-            mostrarMensaje("Faltan datos", "Ingresa tu contraseña.", enfocar: passwordTextField)
+            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu contraseña.", preferredStyle: .alert)
+            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
+                guard let self else { return }
+                self.passwordTextField.becomeFirstResponder()
+            })
+            present(alerta, animated: true)
             return
         }
 
-        cambiarCarga(true, boton: iniciarSesionButton)
+        iniciarSesionButton.isEnabled = false
+        iniciarSesionButton.configuration?.showsActivityIndicator = true
+        view.isUserInteractionEnabled = false
         Auth.auth().signIn(withEmail: correo, password: password) { [weak self] _, error in
             guard let self else { return }
-            self.cambiarCarga(false, boton: self.iniciarSesionButton)
+            self.iniciarSesionButton.isEnabled = true
+            self.iniciarSesionButton.configuration?.showsActivityIndicator = false
+            self.view.isUserInteractionEnabled = true
             if let error {
-                self.mostrarErrorFirebase(
-                    error,
-                    titulo: "No se pudo iniciar sesión",
-                    campoCorreo: self.correoTextField
+                let correoInvalido = AuthErrorCode(rawValue: (error as NSError).code) == .invalidEmail
+                let alerta = UIAlertController(
+                    title: "No se pudo iniciar sesión",
+                    message: MensajeErrorFirebase.texto(para: error),
+                    preferredStyle: .alert
                 )
+                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
+                    guard let self, correoInvalido else { return }
+                    self.correoTextField.becomeFirstResponder()
+                    self.correoTextField.selectAll(nil)
+                })
+                self.present(alerta, animated: true)
                 return
             }
-            AppFlow.showMain()
+            let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
+            sceneDelegate.mostrarPantallaPrincipal()
         }
     }
 

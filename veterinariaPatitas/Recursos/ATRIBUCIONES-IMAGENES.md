@@ -1,0 +1,4 @@
+- toby.jpg: Johan Spaedtke, Golden Retriever adult.jpg, CC0 1.0, Wikimedia Commons
+- luna.jpg: TimOve, Grey cat portrait - 26312887674.jpg, CC BY 2.0, Wikimedia Commons
+- max.jpg: Ltshears, GoldenRetrieverPortrait.jpg, CC BY 3.0, Wikimedia Commons
+- simba.jpg: Miscellaneous contributor, Orange Tabby.jpg, CC0 1.0, Wikimedia Commons
