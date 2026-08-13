@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F10000000000000000000001 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F20000000000000000000001 /* FirebaseCore */; };
+		F10000000000000000000002 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F20000000000000000000002 /* FirebaseAuth */; };
+		F10000000000000000000003 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F20000000000000000000003 /* FirebaseFirestore */; };
+		F10000000000000000000004 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F20000000000000000000004 /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		C97ADF17301C5DBF001E53AE /* veterinariaPatitas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = veterinariaPatitas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F10000000000000000000001 /* FirebaseCore in Frameworks */,
+				F10000000000000000000002 /* FirebaseAuth in Frameworks */,
+				F10000000000000000000003 /* FirebaseFirestore in Frameworks */,
+				F10000000000000000000004 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +89,10 @@
 			);
 			name = veterinariaPatitas;
 			packageProductDependencies = (
+				F20000000000000000000001 /* FirebaseCore */,
+				F20000000000000000000002 /* FirebaseAuth */,
+				F20000000000000000000003 /* FirebaseFirestore */,
+				F20000000000000000000004 /* FirebaseStorage */,
 			);
 			productName = veterinariaPatitas;
 			productReference = C97ADF17301C5DBF001E53AE /* veterinariaPatitas.app */;
@@ -107,6 +122,9 @@
 			);
 			mainGroup = C97ADF0E301C5DBE001E53AE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C97ADF18301C5DBF001E53AE /* Products */;
 			projectDirPath = "";
@@ -149,7 +167,6 @@
 				INFOPLIST_FILE = veterinariaPatitas/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -180,7 +197,6 @@
 				INFOPLIST_FILE = veterinariaPatitas/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -341,6 +357,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.17.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F20000000000000000000001 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		F20000000000000000000002 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		F20000000000000000000003 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		F20000000000000000000004 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F30000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C97ADF0F301C5DBE001E53AE /* Project object */;
 }

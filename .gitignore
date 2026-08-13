@@ -1,0 +1,19 @@
+.DS_Store
+
+# Datos personales y estado local de Xcode
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+
+# Resultados y archivos generados por compilación
+DerivedData/
+build/
+*.xcresult
+
+# Swift Package Manager local
+.build/
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+
+# Archivos temporales
+*.swp
+*~
