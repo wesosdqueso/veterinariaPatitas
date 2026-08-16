@@ -8,6 +8,12 @@ final class RegistroViewController: UIViewController {
     @IBOutlet private weak var confirmarTextField: UITextField!
     @IBOutlet private weak var crearCuentaButton: UIButton!
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        passwordTextField.isSecureTextEntry = true
+        confirmarTextField.isSecureTextEntry = true
+    }
+
     @IBAction private func crearCuenta(_ sender: UIButton) {
         view.endEditing(true)
 
@@ -17,59 +23,47 @@ final class RegistroViewController: UIViewController {
             .lowercased() ?? ""
         let password = passwordTextField.text ?? ""
         guard !nombre.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu nombre.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa tu nombre.") { [weak self] in
+                guard let self = self else { return }
                 self.nombreTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard !correo.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu correo.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa tu correo.") { [weak self] in
+                guard let self = self else { return }
                 self.correoTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard !password.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa una contraseña.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa una contraseña.") { [weak self] in
+                guard let self = self else { return }
                 self.passwordTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard let confirmacion = confirmarTextField.text, !confirmacion.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Confirma tu contraseña.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Confirma tu contraseña.") { [weak self] in
+                guard let self = self else { return }
                 self.confirmarTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard password.count >= 6 else {
-            let alerta = UIAlertController(title: "Contraseña corta", message: "Usa al menos 6 caracteres.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Contraseña corta", message: "Usa al menos 6 caracteres.") { [weak self] in
+                guard let self = self else { return }
                 self.passwordTextField.becomeFirstResponder()
                 self.passwordTextField.selectAll(nil)
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard password == confirmacion else {
-            let alerta = UIAlertController(title: "Contraseñas diferentes", message: "Las contraseñas deben coincidir.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Contraseñas diferentes", message: "Las contraseñas deben coincidir.") { [weak self] in
+                guard let self = self else { return }
                 self.confirmarTextField.becomeFirstResponder()
                 self.confirmarTextField.selectAll(nil)
-            })
-            present(alerta, animated: true)
+            }
             return
         }
 
@@ -81,36 +75,32 @@ final class RegistroViewController: UIViewController {
         crearCuentaButton.configuration?.showsActivityIndicator = true
 
         Auth.auth().createUser(withEmail: correo, password: password) { [weak self] resultado, error in
-            guard let self else { return }
+            guard let self = self else { return }
 
-            if let error {
+            if let error = error {
                 self.crearCuentaButton.isEnabled = true
                 self.crearCuentaButton.configuration?.showsActivityIndicator = false
                 let correoInvalido = AuthErrorCode(rawValue: (error as NSError).code) == .invalidEmail
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "No se pudo crear la cuenta",
-                    message: MensajeErrorFirebase.texto(para: error),
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                    guard let self, correoInvalido else { return }
+                    message: error.localizedDescription
+                ) { [weak self] in
+                    guard let self = self, correoInvalido else { return }
                     self.correoTextField.becomeFirstResponder()
                     self.correoTextField.selectAll(nil)
-                })
-                self.present(alerta, animated: true)
+                }
                 return
             }
 
             guard let usuario = resultado?.user else {
                 self.crearCuentaButton.isEnabled = true
                 self.crearCuentaButton.configuration?.showsActivityIndicator = false
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "No se pudo completar el registro",
-                    message: "Firebase creó la sesión, pero no devolvió los datos del usuario.",
-                    preferredStyle: .alert
+                    message: "Firebase creó la sesión, pero no devolvió los datos del usuario."
                 )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-                self.present(alerta, animated: true)
                 return
             }
 
@@ -122,7 +112,7 @@ final class RegistroViewController: UIViewController {
         let cambio = usuario.createProfileChangeRequest()
         cambio.displayName = nombre
         cambio.commitChanges { error in
-            if let error {
+            if let error = error {
                 print("No se pudo actualizar el nombre del perfil: \(error.localizedDescription)")
             }
 

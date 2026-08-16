@@ -2,7 +2,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-final class SolicitudesAdopcionViewController: UIViewController {
+final class MisSolicitudesAdopcionViewController: UIViewController {
     private struct Solicitud {
         let id: String
         let mascota: String
@@ -83,13 +83,11 @@ final class SolicitudesAdopcionViewController: UIViewController {
     }
 
     private func mostrarError(_ mensaje: String) {
-        let alerta = UIAlertController(title: "No se pudo completar", message: mensaje, preferredStyle: .alert)
-        alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        present(alerta, animated: true)
+        Alerts.show(on: self, title: "No se pudo completar", message: mensaje)
     }
 }
 
-extension SolicitudesAdopcionViewController: UITableViewDataSource, UITableViewDelegate {
+extension MisSolicitudesAdopcionViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         solicitudes.count
     }

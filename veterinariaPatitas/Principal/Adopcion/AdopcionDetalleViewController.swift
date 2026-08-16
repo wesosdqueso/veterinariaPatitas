@@ -43,16 +43,14 @@ final class AdopcionDetalleViewController: UIViewController {
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let digitos = telefono.filter(\.isNumber)
             guard (7...15).contains(digitos.count) else {
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "Número no válido",
-                    message: "Ingresa un número de contacto de 7 a 15 dígitos.",
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Corregir", style: .default) { [weak self] _ in
-                    guard let self else { return }
+                    message: "Ingresa un número de contacto de 7 a 15 dígitos."
+                ) { [weak self] in
+                    guard let self = self else { return }
                     self.mostrarFormularioContacto(usuario: usuario, telefonoInicial: telefono)
-                })
-                self.present(alerta, animated: true)
+                }
                 return
             }
             self.guardarSolicitud(usuario: usuario, telefono: telefono)
@@ -97,21 +95,17 @@ final class AdopcionDetalleViewController: UIViewController {
 
     private func mostrarExito() {
         restaurarBoton()
-        let alerta = UIAlertController(
+        Alerts.show(
+            on: self,
             title: "Solicitud enviada",
-            message: "Registramos tu interés en adoptar a \(mascota.nombre). Puedes consultar el estado desde Mi cuenta → Solicitudes de adopción.",
-            preferredStyle: .alert
-        )
-        alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-            guard let self else { return }
+            message: "Registramos tu interés en adoptar a \(mascota.nombre). Puedes consultar el estado desde Mi cuenta → Solicitudes de adopción."
+        ) { [weak self] in
+            guard let self = self else { return }
             self.navigationController?.popViewController(animated: true)
-        })
-        present(alerta, animated: true)
+        }
     }
 
     private func mostrarAlerta(titulo: String, mensaje: String) {
-        let alerta = UIAlertController(title: titulo, message: mensaje, preferredStyle: .alert)
-        alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        present(alerta, animated: true)
+        Alerts.show(on: self, title: titulo, message: mensaje)
     }
 }

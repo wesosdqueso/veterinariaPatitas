@@ -147,7 +147,7 @@
                         <segue destination="AUTH-CHANGE-VC" kind="show" identifier="showCambiarPassword" id="ACCOUNT-CHANGE-SEGUE"/>
                         <segue destination="PETS-VC" kind="show" identifier="showMisMascotas" id="ACCOUNT-PETS-SEGUE"/>
                         <segue destination="APPOINTMENTS-VC" kind="show" identifier="showMisCitas" id="ACCOUNT-APPOINTMENTS-SEGUE"/>
-                        <segue destination="REQUESTS-VC" kind="show" identifier="showSolicitudesAdopcion" id="ACCOUNT-REQUESTS-SEGUE"/>
+                        <segue destination="REQUESTS-VC" kind="show" identifier="showMisSolicitudesAdopcion" id="ACCOUNT-REQUESTS-SEGUE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="042-42-042" sceneMemberID="firstResponder"/>
@@ -163,7 +163,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-STACK">
-                                <rect key="frame" x="16" y="91" width="361" height="1166.3333333333333"/>
+                                <rect key="frame" x="16" y="91" width="361" height="210.33333333333334"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Mascota" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-PET-LABEL">
                                         <rect key="frame" x="0.0" y="0.0" width="361" height="20.333333333333332"/>
@@ -181,11 +181,14 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                     </label>
-                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-DATE">
-                                        <rect key="frame" x="0.0" y="100.33333333333337" width="361" height="1000.0000000000001"/>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" datePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-DATE">
+                                        <rect key="frame" x="0.0" y="100.33333333333337" width="361" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="BOOKING-DATE-H"/>
+                                        </constraints>
                                     </datePicker>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-SAVE">
-                                        <rect key="frame" x="0.0" y="1116.3333333333333" width="361" height="50"/>
+                                        <rect key="frame" x="0.0" y="160.33333333333334" width="361" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="BOOKING-SAVE-H"/>
                                         </constraints>
@@ -382,16 +385,168 @@ Toca + para agregar la primera.</string>
                             <constraint firstAttribute="trailing" secondItem="PETS-TABLE" secondAttribute="trailing" id="PETS-TABLE-TRAIL"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Mis mascotas" id="PETS-NAV"/>
+                    <navigationItem key="navigationItem" title="Mis mascotas" id="PETS-NAV">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="PETS-ADD">
+                            <connections>
+                                <segue destination="PET-REGISTER-VC" kind="show" identifier="showRegistrarMascota" id="PETS-REGISTER-SEGUE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="PETS-LOADING" id="PETS-LOAD-OUT"/>
                         <outlet property="emptyLabel" destination="PETS-EMPTY" id="PETS-EMPTY-OUT"/>
                         <outlet property="tableView" destination="PETS-TABLE" id="PETS-TABLE-OUT"/>
+                        <segue destination="PET-REGISTER-VC" kind="show" identifier="showEditarMascota" id="PETS-EDIT-SEGUE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PETS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="265" y="-708"/>
+            <point key="canvasLocation" x="1021" y="-725"/>
+        </scene>
+        <!--RegistrarMascotaViewController-->
+        <scene sceneID="PET-REGISTER-SCENE">
+            <objects>
+                <viewController id="PET-REGISTER-VC" userLabel="RegistrarMascotaViewController" customClass="RegistrarMascotaViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PET-REGISTER-VIEW">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PET-REGISTER-SCROLL">
+                                <rect key="frame" x="0.0" y="59" width="393" height="724"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PET-REGISTER-STACK">
+                                        <rect key="frame" x="20" y="24" width="353" height="454"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.badge.plus" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="PET-PHOTO-IMAGE">
+                                                <rect key="frame" x="0.0" y="0.0" width="353" height="160"/>
+                                                <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="160" id="PET-PHOTO-HEIGHT"/>
+                                                </constraints>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
+                                            </imageView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-PHOTO-BUTTON">
+                                                <rect key="frame" x="0.0" y="170" width="353" height="34"/>
+                                                <buttonConfiguration key="configuration" style="tinted" image="photo.on.rectangle" catalog="system" title="Elegir foto"/>
+                                                <connections>
+                                                    <action selector="seleccionarFoto:" destination="PET-REGISTER-VC" eventType="touchUpInside" id="PET-PHOTO-ACTION"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Nombre" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-NAME-LABEL">
+                                                <rect key="frame" x="0.0" y="0.0" width="353" height="14.333333333333334"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre" translatesAutoresizingMaskIntoConstraints="NO" id="PET-NAME-FIELD">
+                                                <rect key="frame" x="0.0" y="24.333333333333329" width="353" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Especie" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-SPECIES-LABEL">
+                                                <rect key="frame" x="0.0" y="68.333333333333343" width="353" height="14.333333333333329"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PET-SPECIES-CONTROL">
+                                                <rect key="frame" x="0.0" y="92.666666666666657" width="353" height="32"/>
+                                                <segments>
+                                                    <segment title="Perro"/>
+                                                    <segment title="Gato"/>
+                                                    <segment title="Otro"/>
+                                                </segments>
+                                                <connections>
+                                                    <action selector="cambiarEspecie:" destination="PET-REGISTER-VC" eventType="valueChanged" id="PET-SPECIES-ACTION"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Raza" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BREED-LABEL">
+                                                <rect key="frame" x="0.0" y="133.66666666666666" width="353" height="14.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BREED-PICKER">
+                                                <rect key="frame" x="0.0" y="158" width="353" height="120"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="120" id="PET-BREED-PICKER-HEIGHT"/>
+                                                </constraints>
+                                            </pickerView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BREED-MANUAL-BUTTON">
+                                                <rect key="frame" x="0.0" y="288" width="353" height="34"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="square" catalog="system" title="Ingresar raza manualmente" imagePadding="8"/>
+                                                <connections>
+                                                    <action selector="alternarIngresoManualRaza:" destination="PET-REGISTER-VC" eventType="touchUpInside" id="PET-BREED-MANUAL-ACTION"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Raza (por ejemplo, mestizo)" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BREED-FIELD">
+                                                <rect key="frame" x="0.0" y="158" width="353" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Sexo" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-SEX-LABEL">
+                                                <rect key="frame" x="0.0" y="202" width="353" height="14.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PET-SEX-CONTROL">
+                                                <rect key="frame" x="0.0" y="226.33333333333331" width="353" height="32"/>
+                                                <segments>
+                                                    <segment title="Macho"/>
+                                                    <segment title="Hembra"/>
+                                                </segments>
+                                            </segmentedControl>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Fecha de nacimiento" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BIRTH-LABEL">
+                                                <rect key="frame" x="0.0" y="267.33333333333331" width="353" height="14.333333333333314"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" datePickerStyle="compact" translatesAutoresizingMaskIntoConstraints="NO" id="PET-BIRTH-PICKER">
+                                                <rect key="frame" x="0.0" y="291.66666666666674" width="353" height="34"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="PET-BIRTH-HEIGHT"/>
+                                                </constraints>
+                                            </datePicker>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Peso" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PET-WEIGHT-LABEL">
+                                                <rect key="frame" x="0.0" y="335.66666666666669" width="353" height="14.333333333333334"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            </label>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Peso en kg (opcional)" translatesAutoresizingMaskIntoConstraints="NO" id="PET-WEIGHT-FIELD">
+                                                <rect key="frame" x="0.0" y="360" width="353" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="PET-REGISTER-CONTENT" firstAttribute="bottom" secondItem="PET-REGISTER-STACK" secondAttribute="bottom" constant="24" id="PET-STACK-BOTTOM"/>
+                                    <constraint firstItem="PET-REGISTER-STACK" firstAttribute="leading" secondItem="PET-REGISTER-CONTENT" secondAttribute="leading" constant="20" id="PET-STACK-LEAD"/>
+                                    <constraint firstItem="PET-REGISTER-STACK" firstAttribute="top" secondItem="PET-REGISTER-CONTENT" secondAttribute="top" constant="24" id="PET-STACK-TOP"/>
+                                    <constraint firstItem="PET-REGISTER-CONTENT" firstAttribute="trailing" secondItem="PET-REGISTER-STACK" secondAttribute="trailing" constant="20" id="PET-STACK-TRAIL"/>
+                                    <constraint firstItem="PET-REGISTER-CONTENT" firstAttribute="width" secondItem="PET-REGISTER-FRAME" secondAttribute="width" id="PET-CONTENT-WIDTH"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="PET-REGISTER-CONTENT"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="PET-REGISTER-FRAME"/>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="PET-REGISTER-SAFE"/>
+                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="PET-REGISTER-SCROLL" secondAttribute="bottom" id="PET-SCROLL-BOTTOM"/>
+                            <constraint firstItem="PET-REGISTER-SCROLL" firstAttribute="leading" secondItem="PET-REGISTER-VIEW" secondAttribute="leading" id="PET-SCROLL-LEAD"/>
+                            <constraint firstItem="PET-REGISTER-SCROLL" firstAttribute="top" secondItem="PET-REGISTER-SAFE" secondAttribute="top" id="PET-SCROLL-TOP"/>
+                            <constraint firstAttribute="trailing" secondItem="PET-REGISTER-SCROLL" secondAttribute="trailing" id="PET-SCROLL-TRAIL"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Registrar mascota" id="PET-REGISTER-NAV"/>
+                    <connections>
+                        <outlet property="especieControl" destination="PET-SPECIES-CONTROL" id="PET-SPECIES-OUT"/>
+                        <outlet property="fotoImageView" destination="PET-PHOTO-IMAGE" id="PET-PHOTO-OUT"/>
+                        <outlet property="ingresoManualRazaButton" destination="PET-BREED-MANUAL-BUTTON" id="PET-BREED-MANUAL-OUT"/>
+                        <outlet property="nacimientoPicker" destination="PET-BIRTH-PICKER" id="PET-BIRTH-OUT"/>
+                        <outlet property="nombreField" destination="PET-NAME-FIELD" id="PET-NAME-OUT"/>
+                        <outlet property="pesoField" destination="PET-WEIGHT-FIELD" id="PET-WEIGHT-OUT"/>
+                        <outlet property="razaField" destination="PET-BREED-FIELD" id="PET-BREED-OUT"/>
+                        <outlet property="razaPicker" destination="PET-BREED-PICKER" id="PET-BREED-PICKER-OUT"/>
+                        <outlet property="sexoControl" destination="PET-SEX-CONTROL" id="PET-SEX-OUT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PET-REGISTER-FIRST" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1775" y="-725"/>
         </scene>
         <!--MisCitasViewController-->
         <scene sceneID="APPOINTMENTS-SCENE">
@@ -441,12 +596,12 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="APPOINTMENTS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="265" y="770"/>
+            <point key="canvasLocation" x="-285" y="770"/>
         </scene>
-        <!--SolicitudesAdopcionViewController-->
+        <!--MisSolicitudesAdopcionViewController-->
         <scene sceneID="REQUESTS-SCENE">
             <objects>
-                <viewController id="REQUESTS-VC" userLabel="SolicitudesAdopcionViewController" customClass="SolicitudesAdopcionViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="REQUESTS-VC" userLabel="MisSolicitudesAdopcionViewController" customClass="MisSolicitudesAdopcionViewController" customModule="veterinariaPatitas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="REQUESTS-VIEW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -491,7 +646,7 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="REQUESTS-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1285" y="404"/>
+            <point key="canvasLocation" x="808" y="770"/>
         </scene>
         <!--LoginViewController-->
         <scene sceneID="AUTH-LOGIN-SCENE">
@@ -527,7 +682,7 @@ Toca + para agregar la primera.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-PASS" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-LOGIN-PASS">
                                         <rect key="frame" x="0.0" y="263.66666666666663" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-LOGIN-PASS-H"/>
@@ -613,7 +768,7 @@ Toca + para agregar la primera.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next" textContentType="emailAddress"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña (mínimo 6 caracteres)" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-PASS" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña (mínimo 6 caracteres)" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-PASS">
                                         <rect key="frame" x="0.0" y="169.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-PASS-H"/>
@@ -621,7 +776,7 @@ Toca + para agregar la primera.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="newPassword"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-CONFIRM" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-REGISTER-CONFIRM">
                                         <rect key="frame" x="0.0" y="229.66666666666666" width="345" height="43.999999999999972"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-REGISTER-CONFIRM-H"/>
@@ -739,7 +894,7 @@ Toca + para agregar la primera.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="33.666666666666664"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña actual" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CURRENT" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contraseña actual" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CURRENT">
                                         <rect key="frame" x="0.0" y="49.666666666666657" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-CURRENT-H"/>
@@ -747,7 +902,7 @@ Toca + para agregar la primera.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-NEW" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-NEW">
                                         <rect key="frame" x="0.0" y="109.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-NEW-H"/>
@@ -755,7 +910,7 @@ Toca + para agregar la primera.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CONFIRM" customClass="PasswordTextField" customModule="veterinariaPatitas" customModuleProvider="target">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirmar nueva contraseña" translatesAutoresizingMaskIntoConstraints="NO" id="AUTH-CHANGE-CONFIRM">
                                         <rect key="frame" x="0.0" y="169.66666666666666" width="345" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="AUTH-CHANGE-CONFIRM-H"/>
@@ -795,7 +950,7 @@ Toca + para agregar la primera.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AUTH-CHANGE-FIRST" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1286" y="-436"/>
+            <point key="canvasLocation" x="1312" y="6"/>
         </scene>
     </scenes>
     <resources>
@@ -803,6 +958,9 @@ Toca + para agregar la primera.</string>
         <image name="hare.fill" catalog="system" width="128" height="88"/>
         <image name="patitas_1_4 2.png" width="207" height="90"/>
         <image name="pawprint.fill" catalog="system" width="128" height="112"/>
+        <image name="photo.badge.plus" catalog="system" width="128" height="102"/>
+        <image name="photo.on.rectangle" catalog="system" width="128" height="93"/>
+        <image name="square" catalog="system" width="128" height="113"/>
         <image name="teddybear.fill" catalog="system" width="126" height="128"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -815,6 +973,9 @@ Toca + para agregar la primera.</string>
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemGroupedBackgroundColor">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
             <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

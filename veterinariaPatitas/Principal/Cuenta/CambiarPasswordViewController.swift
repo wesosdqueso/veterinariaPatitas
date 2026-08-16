@@ -7,58 +7,53 @@ final class CambiarPasswordViewController: UIViewController {
     @IBOutlet private weak var confirmarTextField: UITextField!
     @IBOutlet private weak var guardarButton: UIButton!
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        actualTextField.isSecureTextEntry = true
+        nuevaTextField.isSecureTextEntry = true
+        confirmarTextField.isSecureTextEntry = true
+    }
+
     @IBAction private func cambiarPassword(_ sender: UIButton) {
         guard let usuario = Auth.auth().currentUser, let correo = usuario.email else {
-            let alerta = UIAlertController(title: "Sesión no disponible", message: "Vuelve a iniciar sesión.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-            present(alerta, animated: true)
+            Alerts.show(on: self, title: "Sesión no disponible", message: "Vuelve a iniciar sesión.")
             return
         }
         let actual = actualTextField.text ?? ""
         let nueva = nuevaTextField.text ?? ""
         guard !actual.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu contraseña actual.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa tu contraseña actual.") { [weak self] in
+                guard let self = self else { return }
                 self.actualTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard !nueva.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa una contraseña nueva.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa una contraseña nueva.") { [weak self] in
+                guard let self = self else { return }
                 self.nuevaTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard nueva.count >= 6 else {
-            let alerta = UIAlertController(title: "Contraseña corta", message: "Usa al menos 6 caracteres.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Contraseña corta", message: "Usa al menos 6 caracteres.") { [weak self] in
+                guard let self = self else { return }
                 self.nuevaTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard let confirmacion = confirmarTextField.text, !confirmacion.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Confirma tu nueva contraseña.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Confirma tu nueva contraseña.") { [weak self] in
+                guard let self = self else { return }
                 self.confirmarTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard nueva == confirmacion else {
-            let alerta = UIAlertController(title: "Contraseñas diferentes", message: "La nueva contraseña y su confirmación deben coincidir.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Contraseñas diferentes", message: "La nueva contraseña y su confirmación deben coincidir.") { [weak self] in
+                guard let self = self else { return }
                 self.confirmarTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
 
@@ -72,13 +67,7 @@ final class CambiarPasswordViewController: UIViewController {
                 self.guardarButton.isEnabled = true
                 self.guardarButton.configuration?.showsActivityIndicator = false
                 self.view.isUserInteractionEnabled = true
-                let alerta = UIAlertController(
-                    title: "No se pudo verificar",
-                    message: MensajeErrorFirebase.texto(para: error),
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-                self.present(alerta, animated: true)
+                Alerts.show(on: self, title: "No se pudo verificar", message: error.localizedDescription)
                 return
             }
             usuario.updatePassword(to: nueva) { [weak self] error in
@@ -87,25 +76,17 @@ final class CambiarPasswordViewController: UIViewController {
                 self.guardarButton.configuration?.showsActivityIndicator = false
                 self.view.isUserInteractionEnabled = true
                 if let error {
-                    let alerta = UIAlertController(
-                        title: "No se pudo cambiar",
-                        message: MensajeErrorFirebase.texto(para: error),
-                        preferredStyle: .alert
-                    )
-                    alerta.addAction(UIAlertAction(title: "Aceptar", style: .default))
-                    self.present(alerta, animated: true)
+                    Alerts.show(on: self, title: "No se pudo cambiar", message: error.localizedDescription)
                     return
                 }
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "Contraseña actualizada",
-                    message: "Ya puedes usar tu nueva contraseña.",
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                    guard let self else { return }
+                    message: "Ya puedes usar tu nueva contraseña."
+                ) { [weak self] in
+                    guard let self = self else { return }
                     self.navigationController?.popViewController(animated: true)
-                })
-                self.present(alerta, animated: true)
+                }
             }
         }
     }

@@ -6,25 +6,26 @@ final class LoginViewController: UIViewController {
     @IBOutlet private weak var passwordTextField: UITextField!
     @IBOutlet private weak var iniciarSesionButton: UIButton!
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        passwordTextField.isSecureTextEntry = true
+    }
+
     @IBAction private func iniciarSesion(_ sender: UIButton) {
         let correo = correoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text ?? ""
         guard !correo.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu correo.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa tu correo.") { [weak self] in
+                guard let self = self else { return }
                 self.correoTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
         guard !password.isEmpty else {
-            let alerta = UIAlertController(title: "Faltan datos", message: "Ingresa tu contraseña.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Faltan datos", message: "Ingresa tu contraseña.") { [weak self] in
+                guard let self = self else { return }
                 self.passwordTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
 
@@ -32,28 +33,25 @@ final class LoginViewController: UIViewController {
         iniciarSesionButton.configuration?.showsActivityIndicator = true
         view.isUserInteractionEnabled = false
         Auth.auth().signIn(withEmail: correo, password: password) { [weak self] _, error in
-            guard let self else { return }
+            guard let self = self else { return }
             self.iniciarSesionButton.isEnabled = true
             self.iniciarSesionButton.configuration?.showsActivityIndicator = false
             self.view.isUserInteractionEnabled = true
-            if let error {
+            if let error = error {
                 let correoInvalido = AuthErrorCode(rawValue: (error as NSError).code) == .invalidEmail
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "No se pudo iniciar sesión",
-                    message: MensajeErrorFirebase.texto(para: error),
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                    guard let self, correoInvalido else { return }
+                    message: error.localizedDescription
+                ) { [weak self] in
+                    guard let self = self, correoInvalido else { return }
                     self.correoTextField.becomeFirstResponder()
                     self.correoTextField.selectAll(nil)
-                })
-                self.present(alerta, animated: true)
+                }
                 return
             }
             let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
             sceneDelegate.mostrarPantallaPrincipal()
         }
     }
-
 }

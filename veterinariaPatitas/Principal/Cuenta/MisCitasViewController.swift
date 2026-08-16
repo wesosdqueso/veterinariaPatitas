@@ -92,9 +92,7 @@ final class MisCitasViewController: UIViewController {
     }
 
     private func mostrarError(_ mensaje: String) {
-        let alert = UIAlertController(title: "No se pudo completar", message: mensaje, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Aceptar", style: .default))
-        present(alert, animated: true)
+        Alerts.show(on: self, title: "No se pudo completar", message: mensaje)
     }
 }
 

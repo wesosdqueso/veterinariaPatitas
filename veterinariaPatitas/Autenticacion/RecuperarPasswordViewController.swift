@@ -8,12 +8,10 @@ final class RecuperarPasswordViewController: UIViewController {
     @IBAction private func enviarRecuperacion(_ sender: UIButton) {
         let correo = correoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !correo.isEmpty else {
-            let alerta = UIAlertController(title: "Falta el correo", message: "Ingresa el correo de tu cuenta.", preferredStyle: .alert)
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+            Alerts.show(on: self, title: "Falta el correo", message: "Ingresa el correo de tu cuenta.") { [weak self] in
+                guard let self = self else { return }
                 self.correoTextField.becomeFirstResponder()
-            })
-            present(alerta, animated: true)
+            }
             return
         }
 
@@ -27,29 +25,25 @@ final class RecuperarPasswordViewController: UIViewController {
             self.view.isUserInteractionEnabled = true
             if let error {
                 let correoInvalido = AuthErrorCode(rawValue: (error as NSError).code) == .invalidEmail
-                let alerta = UIAlertController(
+                Alerts.show(
+                    on: self,
                     title: "No se pudo enviar",
-                    message: MensajeErrorFirebase.texto(para: error),
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                    guard let self, correoInvalido else { return }
+                    message: error.localizedDescription
+                ) { [weak self] in
+                    guard let self = self, correoInvalido else { return }
                     self.correoTextField.becomeFirstResponder()
                     self.correoTextField.selectAll(nil)
-                })
-                self.present(alerta, animated: true)
+                }
                 return
             }
-            let alerta = UIAlertController(
+            Alerts.show(
+                on: self,
                 title: "Correo enviado",
-                message: "Revisa tu bandeja de entrada y sigue el enlace para crear una contraseña nueva.",
-                preferredStyle: .alert
-            )
-            alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { [weak self] _ in
-                guard let self else { return }
+                message: "Revisa tu bandeja de entrada y sigue el enlace para crear una contraseña nueva."
+            ) { [weak self] in
+                guard let self = self else { return }
                 self.dismiss(animated: true)
-            })
-            self.present(alerta, animated: true)
+            }
         }
     }
 }
