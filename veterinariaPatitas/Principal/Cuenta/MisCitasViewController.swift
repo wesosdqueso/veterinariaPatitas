@@ -1,21 +1,13 @@
 import UIKit
-import FirebaseAuth
 import FirebaseFirestore
 
 final class MisCitasViewController: UIViewController {
-    private struct Cita {
-        let id: String
-        let servicio: String
-        let mascota: String
-        let fecha: Date
-        let estado: String
-    }
-
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var emptyLabel: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     private var citas: [Cita] = []
     private var listener: ListenerRegistration?
+    private let repository = CitasRepository()
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "es_PE")
@@ -36,57 +28,48 @@ final class MisCitasViewController: UIViewController {
     }
 
     private func escucharCitas() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            mostrarError("Debes iniciar sesión para consultar tus citas.")
-            return
-        }
         activityIndicator.startAnimating()
         emptyLabel.isHidden = true
-        listener = Firestore.firestore()
-            .collection("usuarios").document(uid)
-            .collection("citas")
-            .order(by: "fecha", descending: false)
-            .addSnapshotListener { [weak self] snapshot, error in
+
+        do {
+            listener = try repository.escuchar { [weak self] resultado in
                 guard let self else { return }
                 self.activityIndicator.stopAnimating()
                 self.activityIndicator.isHidden = true
-                if let error {
+
+                switch resultado {
+                case .failure(let error):
                     self.mostrarError("No se pudieron cargar las citas. \(error.localizedDescription)")
-                    return
+                case .success(let citas):
+                    self.citas = citas
+                    self.emptyLabel.isHidden = !citas.isEmpty
+                    self.tableView.reloadData()
                 }
-                self.citas = snapshot?.documents.compactMap { documento in
-                    let datos = documento.data()
-                    guard let servicio = datos["servicio"] as? String,
-                          let mascota = datos["mascotaNombre"] as? String,
-                          let fecha = datos["fecha"] as? Timestamp else { return nil }
-                    return Cita(
-                        id: documento.documentID,
-                        servicio: servicio,
-                        mascota: mascota,
-                        fecha: fecha.dateValue(),
-                        estado: datos["estado"] as? String ?? "Pendiente"
-                    )
-                } ?? []
-                self.emptyLabel.isHidden = !self.citas.isEmpty
-                self.tableView.reloadData()
             }
+        } catch {
+            activityIndicator.stopAnimating()
+            activityIndicator.isHidden = true
+            mostrarError(error.localizedDescription)
+        }
     }
 
     private func cancelar(_ cita: Cita) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
         let alert = UIAlertController(
             title: "Cancelar cita",
-            message: "¿Deseas cancelar la cita de \(cita.mascota) para \(cita.servicio)?",
+            message: "¿Deseas cancelar la cita de \(cita.mascotaNombre) para \(cita.servicio)?",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "Conservar", style: .cancel))
         alert.addAction(UIAlertAction(title: "Cancelar cita", style: .destructive) { [weak self] _ in
             guard let self else { return }
-            Firestore.firestore().collection("usuarios").document(uid).collection("citas")
-                .document(cita.id).updateData(["estado": "Cancelada"]) { [weak self] error in
+            do {
+                try self.repository.cancelar(id: cita.id) { [weak self] error in
                     guard let self else { return }
                     if let error { self.mostrarError(error.localizedDescription) }
                 }
+            } catch {
+                self.mostrarError(error.localizedDescription)
+            }
         })
         present(alert, animated: true)
     }
@@ -106,10 +89,10 @@ extension MisCitasViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CitaCell", for: indexPath)
         var content = cell.defaultContentConfiguration()
         content.text = cita.servicio
-        content.secondaryText = "\(cita.mascota) · \(Self.dateFormatter.string(from: cita.fecha)) · \(cita.estado)"
+        content.secondaryText = "\(cita.mascotaNombre) · \(Self.dateFormatter.string(from: cita.fecha)) · \(cita.estado.rawValue)"
         content.secondaryTextProperties.numberOfLines = 0
-        content.image = UIImage(systemName: cita.estado == "Cancelada" ? "calendar.badge.minus" : "calendar.badge.clock")
-        content.imageProperties.tintColor = cita.estado == "Cancelada" ? .systemRed : .systemGreen
+        content.image = UIImage(systemName: cita.estado == .cancelada ? "calendar.badge.minus" : "calendar.badge.clock")
+        content.imageProperties.tintColor = cita.estado == .cancelada ? .systemRed : .systemGreen
         cell.contentConfiguration = content
         cell.selectionStyle = .none
         return cell
@@ -117,7 +100,7 @@ extension MisCitasViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let cita = citas[indexPath.row]
-        guard cita.estado != "Cancelada", cita.fecha > Date() else { return nil }
+        guard cita.estado != .cancelada, cita.fecha > Date() else { return nil }
         let accion = UIContextualAction(style: .destructive, title: "Cancelar") { [weak self] _, _, completion in
             guard let self else {
                 completion(false)

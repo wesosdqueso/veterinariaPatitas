@@ -1,23 +1,16 @@
 import UIKit
-import FirebaseAuth
 import FirebaseFirestore
 
 final class AgendarCitaViewController: UIViewController {
-    private struct MascotaOpcion {
-        let id: String
-        let nombre: String
-        let detalle: String
-        let imagen: UIImage
-        let tieneFoto: Bool
-    }
-
     var servicio = "Servicio"
     @IBOutlet private weak var mascotaButton: UIButton!
     @IBOutlet private weak var estadoMascotasLabel: UILabel!
     @IBOutlet private weak var fechaPicker: UIDatePicker!
     @IBOutlet private weak var guardarButton: UIButton!
-    private var mascotas: [MascotaOpcion] = []
-    private var mascotaSeleccionada: MascotaOpcion?
+    private let mascotasRepository = MascotasRepository()
+    private let citasRepository = CitasRepository()
+    private var mascotas: [Mascota] = []
+    private var mascotaSeleccionada: Mascota?
     private var listener: ListenerRegistration?
     private lazy var fotosRepository = FotosMascotasRepository()
 
@@ -37,76 +30,56 @@ final class AgendarCitaViewController: UIViewController {
     }
 
     private func escucharMascotas() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            mostrarEstadoSinMascotas("Debes iniciar sesión para seleccionar una mascota.")
-            return
-        }
-
-        listener = Firestore.firestore()
-            .collection("usuarios").document(uid)
-            .collection("mascotas")
-            .order(by: "creadoEn", descending: false)
-            .addSnapshotListener { [weak self] snapshot, error in
+        do {
+            listener = try mascotasRepository.escuchar { [weak self] resultado in
                 guard let self else { return }
                 self.mascotaButton.configuration?.showsActivityIndicator = false
 
-                if let error {
+                switch resultado {
+                case .failure(let error):
                     self.mostrarEstadoSinMascotas("No se pudieron cargar tus mascotas. \(error.localizedDescription)")
-                    return
-                }
-
-                self.mascotas = snapshot?.documents.compactMap { documento in
-                    let datos = documento.data()
-                    guard let nombre = datos["nombre"] as? String else { return nil }
-                    let especie = datos["especie"] as? String ?? "Mascota"
-                    let raza = datos["raza"] as? String ?? "Sin raza"
-                    let sexo = datos["sexo"] as? String ?? "Sexo no indicado"
-                    let peso = (datos["peso"] as? Double)
-                        .map { " · \(String(format: "%.1f", $0)) kg" } ?? ""
-                    let foto = self.fotosRepository.imagen(mascotaId: documento.documentID)
-                    let imagen = foto
-                        ?? UIImage(systemName: especie == "Gato" ? "cat.fill" : "pawprint.fill")
-                        ?? UIImage()
-                    return MascotaOpcion(
-                        id: documento.documentID,
-                        nombre: nombre,
-                        detalle: "\(especie) · \(raza) · \(sexo)\(peso)",
-                        imagen: imagen,
-                        tieneFoto: foto != nil
-                    )
-                } ?? []
-
-                guard !self.mascotas.isEmpty else {
-                    self.mostrarEstadoSinMascotas("Primero registra una mascota desde Mi cuenta → Mis mascotas.")
-                    return
-                }
-
-                self.estadoMascotasLabel.isHidden = true
-                self.mascotaButton.isEnabled = true
-                self.actualizarMenuMascotas()
-
-                if let seleccionada = self.mascotaSeleccionada,
-                   !self.mascotas.contains(where: { $0.id == seleccionada.id }) {
-                    self.mascotaSeleccionada = nil
-                    self.guardarButton.isEnabled = false
-                }
-
-                if self.mascotaSeleccionada == nil {
-                    self.mascotaButton.configuration?.title = "Seleccionar mascota"
-                    self.mascotaButton.configuration?.subtitle = nil
-                    self.mascotaButton.configuration?.image = UIImage(systemName: "pawprint.fill")
+                case .success(let mascotas):
+                    self.mascotas = mascotas
+                    self.mostrarMascotas()
                 }
             }
+        } catch {
+            mostrarEstadoSinMascotas(error.localizedDescription)
+        }
+    }
+
+    private func mostrarMascotas() {
+        guard !mascotas.isEmpty else {
+            mostrarEstadoSinMascotas("Primero registra una mascota desde Mi cuenta → Mis mascotas.")
+            return
+        }
+
+        estadoMascotasLabel.isHidden = true
+        mascotaButton.isEnabled = true
+        actualizarMenuMascotas()
+
+        if let seleccionada = mascotaSeleccionada,
+           !mascotas.contains(where: { $0.id == seleccionada.id }) {
+            mascotaSeleccionada = nil
+            guardarButton.isEnabled = false
+        }
+
+        if mascotaSeleccionada == nil {
+            mascotaButton.configuration?.title = "Seleccionar mascota"
+            mascotaButton.configuration?.subtitle = nil
+            mascotaButton.configuration?.image = UIImage(systemName: "pawprint.fill")
+        }
     }
 
     private func actualizarMenuMascotas() {
         mascotaButton.menu = UIMenu(
             title: "Selecciona una mascota",
             children: mascotas.map { mascota in
-                UIAction(
+                let presentacion = presentacionMascota(mascota)
+                return UIAction(
                     title: mascota.nombre,
-                    subtitle: mascota.detalle,
-                    image: mascota.imagen.withRenderingMode(mascota.tieneFoto ? .alwaysOriginal : .alwaysTemplate),
+                    subtitle: presentacion.detalle,
+                    image: presentacion.imagen.withRenderingMode(presentacion.tieneFoto ? .alwaysOriginal : .alwaysTemplate),
                     state: mascota.id == mascotaSeleccionada?.id ? .on : .off
                 ) { [weak self] _ in
                     guard let self else { return }
@@ -117,17 +90,27 @@ final class AgendarCitaViewController: UIViewController {
         mascotaButton.showsMenuAsPrimaryAction = true
     }
 
-    private func seleccionar(_ mascota: MascotaOpcion) {
+    private func seleccionar(_ mascota: Mascota) {
+        let presentacion = presentacionMascota(mascota)
         mascotaSeleccionada = mascota
         mascotaButton.configuration?.title = mascota.nombre
-        mascotaButton.configuration?.subtitle = mascota.detalle
-        mascotaButton.configuration?.image = mascota.imagen.withRenderingMode(
-            mascota.tieneFoto ? .alwaysOriginal : .alwaysTemplate
+        mascotaButton.configuration?.subtitle = presentacion.detalle
+        mascotaButton.configuration?.image = presentacion.imagen.withRenderingMode(
+            presentacion.tieneFoto ? .alwaysOriginal : .alwaysTemplate
         )
         mascotaButton.configuration?.imagePlacement = .leading
         mascotaButton.configuration?.imagePadding = 12
         guardarButton.isEnabled = true
         actualizarMenuMascotas()
+    }
+
+    private func presentacionMascota(_ mascota: Mascota) -> (detalle: String, imagen: UIImage, tieneFoto: Bool) {
+        let peso = mascota.peso.map { " · \(String(format: "%.1f", $0)) kg" } ?? ""
+        let foto = fotosRepository.imagen(mascotaId: mascota.id)
+        let imagen = foto
+            ?? UIImage(systemName: mascota.especie == "Gato" ? "cat.fill" : "pawprint.fill")
+            ?? UIImage()
+        return ("\(mascota.especie) · \(mascota.raza) · \(mascota.sexo)\(peso)", imagen, foto != nil)
     }
 
     private func mostrarEstadoSinMascotas(_ mensaje: String) {
@@ -146,37 +129,29 @@ final class AgendarCitaViewController: UIViewController {
 
     @IBAction private func guardarCita(_ sender: UIButton) {
         guard let mascota = mascotaSeleccionada else {
-            presentAlert(title: "Falta información", message: "Selecciona una de tus mascotas.")
+            Alerts.show(on: self, title: "Falta información", message: "Selecciona una de tus mascotas.")
             return
         }
-        guard let uid = Auth.auth().currentUser?.uid else {
-            presentAlert(title: "Sesión finalizada", message: "Vuelve a iniciar sesión para registrar la cita.")
-            return
-        }
-
         guardarButton.isEnabled = false
         guardarButton.configuration?.showsActivityIndicator = true
 
-        let documento = Firestore.firestore()
-            .collection("usuarios").document(uid)
-            .collection("citas").document()
-        let datos: [String: Any] = [
-            "servicio": servicio,
-            "mascotaId": mascota.id,
-            "mascotaNombre": mascota.nombre,
-            "fecha": Timestamp(date: fechaPicker.date),
-            "estado": "Pendiente",
-            "creadoEn": FieldValue.serverTimestamp()
-        ]
-
-        documento.setData(datos) { [weak self] error in
-            guard let self else { return }
-            if let error {
-                self.restaurarBotonGuardar()
-                self.presentAlert(title: "No se pudo registrar", message: error.localizedDescription)
-            } else {
-                self.mostrarConfirmacion(mascota: mascota.nombre)
+        do {
+            try citasRepository.registrar(
+                servicio: servicio,
+                mascota: mascota,
+                fecha: fechaPicker.date
+            ) { [weak self] error in
+                guard let self else { return }
+                if let error {
+                    self.restaurarBotonGuardar()
+                    Alerts.show(on: self, title: "No se pudo registrar", message: error.localizedDescription)
+                } else {
+                    self.mostrarConfirmacion(mascota: mascota.nombre)
+                }
             }
+        } catch {
+            restaurarBotonGuardar()
+            Alerts.show(on: self, title: "No se pudo registrar", message: error.localizedDescription)
         }
     }
 
@@ -196,9 +171,5 @@ final class AgendarCitaViewController: UIViewController {
             guard let self = self else { return }
             self.navigationController?.popViewController(animated: true)
         }
-    }
-
-    private func presentAlert(title: String, message: String) {
-        Alerts.show(on: self, title: title, message: message)
     }
 }

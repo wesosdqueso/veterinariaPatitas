@@ -31,7 +31,7 @@ final class RegistrarMascotaViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Guardar",
-            style: .done,
+            style: .prominent,
             target: self,
             action: #selector(guardarDesdeNavegacion)
         )
@@ -370,22 +370,13 @@ extension RegistrarMascotaViewController: UIPickerViewDataSource, UIPickerViewDe
         fila.nombreLabel.text = raza.nombre
         fila.imageView.image = UIImage(systemName: "pawprint.fill")
 
-        cargarImagenRaza(raza) { imagen in
-            guard fila.razaId == raza.id, let imagen else { return }
-            fila.imageView.image = imagen
+        if !raza.id.hasPrefix("gato:") {
+            razasService.cargarImagen(para: raza) { imagen in
+                guard fila.razaId == raza.id, let imagen else { return }
+                fila.imageView.image = imagen
+            }
         }
         return fila
-    }
-
-    private func cargarImagenRaza(
-        _ raza: RazaOpcion,
-        completion: @escaping (UIImage?) -> Void
-    ) {
-        if raza.id.hasPrefix("gato:") {
-            razasGatosService.cargarImagen(para: raza, completion: completion)
-        } else {
-            razasService.cargarImagen(para: raza, completion: completion)
-        }
     }
 
     func pickerView(

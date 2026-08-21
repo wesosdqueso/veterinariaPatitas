@@ -10,12 +10,35 @@ final class CampaniasCarouselCell: UITableViewCell,
 
     private var campanias: [String] = []
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        collectionView.isPagingEnabled = true
+        collectionView.decelerationRate = .fast
+
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumLineSpacing = 0
+            layout.minimumInteritemSpacing = 0
+            layout.sectionInset = .zero
+        }
+
+        let tapEnPuntos = UITapGestureRecognizer(target: self, action: #selector(seleccionarPagina(_:)))
+        pageControl.addGestureRecognizer(tapEnPuntos)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
     func configure(with campanias: [String]) {
         self.campanias = campanias
         pageControl.numberOfPages = campanias.count
         pageControl.currentPage = 0
-        collectionView.setContentOffset(.zero, animated: false)
+        pageControl.isHidden = campanias.count <= 1
         collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        collectionView.setContentOffset(.zero, animated: false)
     }
 
     func collectionView(
@@ -42,24 +65,34 @@ final class CampaniasCarouselCell: UITableViewCell,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        CGSize(width: collectionView.bounds.width - 38, height: collectionView.bounds.height - 2)
+        collectionView.bounds.size
     }
 
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         actualizarPagina()
     }
 
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        actualizarPagina()
+    @objc private func seleccionarPagina(_ gesture: UITapGestureRecognizer) {
+        guard campanias.count > 1 else { return }
+
+        let anchoPorPagina = pageControl.bounds.width / CGFloat(campanias.count)
+        guard anchoPorPagina > 0 else { return }
+
+        let posicionX = gesture.location(in: pageControl).x
+        let pagina = min(max(Int(posicionX / anchoPorPagina), 0), campanias.count - 1)
+        pageControl.currentPage = pagina
+
+        collectionView.scrollToItem(
+            at: IndexPath(item: pagina, section: 0),
+            at: .centeredHorizontally,
+            animated: true
+        )
     }
 
     private func actualizarPagina() {
-        let centro = CGPoint(
-            x: collectionView.contentOffset.x + collectionView.bounds.width / 2,
-            y: collectionView.bounds.height / 2
-        )
-        if let indexPath = collectionView.indexPathForItem(at: centro) {
-            pageControl.currentPage = indexPath.item
-        }
+        guard collectionView.bounds.width > 0, !campanias.isEmpty else { return }
+
+        let pagina = Int(round(collectionView.contentOffset.x / collectionView.bounds.width))
+        pageControl.currentPage = min(max(pagina, 0), campanias.count - 1)
     }
 }

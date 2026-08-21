@@ -31,7 +31,7 @@ final class AdopcionDetalleViewController: UIViewController {
             preferredStyle: .alert
         )
         confirmacion.addTextField { campo in
-            campo.placeholder = "Número de contacto"
+            campo.placeholder = "Celular de 9 dígitos"
             campo.text = telefonoInicial
             campo.keyboardType = .phonePad
             campo.textContentType = .telephoneNumber
@@ -42,18 +42,18 @@ final class AdopcionDetalleViewController: UIViewController {
             let telefono = confirmacion.textFields?.first?.text?
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             let digitos = telefono.filter(\.isNumber)
-            guard (7...15).contains(digitos.count) else {
+            guard digitos.count == 9, digitos.first == "9" else {
                 Alerts.show(
                     on: self,
-                    title: "Número no válido",
-                    message: "Ingresa un número de contacto de 7 a 15 dígitos."
+                    title: "Celular no válido",
+                    message: "Ingresa un número de celular de 9 dígitos que empiece con 9."
                 ) { [weak self] in
                     guard let self = self else { return }
                     self.mostrarFormularioContacto(usuario: usuario, telefonoInicial: telefono)
                 }
                 return
             }
-            self.guardarSolicitud(usuario: usuario, telefono: telefono)
+            self.guardarSolicitud(usuario: usuario, telefono: digitos)
         })
         present(confirmacion, animated: true)
     }
