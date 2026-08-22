@@ -17,3 +17,6 @@ build/
 # Archivos temporales
 *.swp
 *~
+
+# Herramientas administrativas locales de Firebase
+scripts-firebase/
