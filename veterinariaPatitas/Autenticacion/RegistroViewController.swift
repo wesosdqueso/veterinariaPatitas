@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 final class RegistroViewController: UIViewController {
     @IBOutlet private weak var nombreTextField: UITextField!
@@ -111,13 +112,32 @@ final class RegistroViewController: UIViewController {
     private func guardarNombre(_ nombre: String, para usuario: User) {
         let cambio = usuario.createProfileChangeRequest()
         cambio.displayName = nombre
-        cambio.commitChanges { error in
+        cambio.commitChanges { [weak self] error in
+            guard let self else { return }
             if let error = error {
                 print("No se pudo actualizar el nombre del perfil: \(error.localizedDescription)")
             }
 
-            let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
-            sceneDelegate.mostrarPantallaPrincipal()
+            self.guardarPerfilFirestore(nombre: nombre, usuario: usuario)
         }
+    }
+
+    private func guardarPerfilFirestore(nombre: String, usuario: User) {
+        let datos: [String: Any] = [
+            "nombre": nombre,
+            "correo": usuario.email ?? "",
+            "creadoEn": FieldValue.serverTimestamp()
+        ]
+
+        Firestore.firestore().collection("usuarios").document(usuario.uid)
+            .setData(datos, merge: true) { [weak self] error in
+                guard let self else { return }
+                if let error {
+                    print("No se pudo guardar el perfil en Firestore: \(error.localizedDescription)")
+                }
+
+                let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
+                sceneDelegate.mostrarPantallaPrincipal()
+            }
     }
 }

@@ -366,16 +366,7 @@ extension RegistrarMascotaViewController: UIPickerViewDataSource, UIPickerViewDe
     ) -> UIView {
         let fila = (view as? RazaPickerRowView) ?? RazaPickerRowView()
         let raza = razas[row]
-        fila.razaId = raza.id
         fila.nombreLabel.text = raza.nombre
-        fila.imageView.image = UIImage(systemName: "pawprint.fill")
-
-        if !raza.id.hasPrefix("gato:") {
-            razasService.cargarImagen(para: raza) { imagen in
-                guard fila.razaId == raza.id, let imagen else { return }
-                fila.imageView.image = imagen
-            }
-        }
         return fila
     }
 

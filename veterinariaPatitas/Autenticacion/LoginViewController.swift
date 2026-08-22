@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 final class LoginViewController: UIViewController {
     @IBOutlet private weak var correoTextField: UITextField!
@@ -32,7 +33,7 @@ final class LoginViewController: UIViewController {
         iniciarSesionButton.isEnabled = false
         iniciarSesionButton.configuration?.showsActivityIndicator = true
         view.isUserInteractionEnabled = false
-        Auth.auth().signIn(withEmail: correo, password: password) { [weak self] _, error in
+        Auth.auth().signIn(withEmail: correo, password: password) { [weak self] resultado, error in
             guard let self = self else { return }
             self.iniciarSesionButton.isEnabled = true
             self.iniciarSesionButton.configuration?.showsActivityIndicator = false
@@ -50,8 +51,29 @@ final class LoginViewController: UIViewController {
                 }
                 return
             }
-            let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
-            sceneDelegate.mostrarPantallaPrincipal()
+            guard let usuario = resultado?.user else { return }
+            self.asegurarPerfilFirestore(usuario: usuario)
         }
+    }
+
+    private func asegurarPerfilFirestore(usuario: User) {
+        var datos: [String: Any] = [
+            "correo": usuario.email ?? "",
+            "actualizadoEn": FieldValue.serverTimestamp()
+        ]
+        if let nombre = usuario.displayName, !nombre.isEmpty {
+            datos["nombre"] = nombre
+        }
+
+        Firestore.firestore().collection("usuarios").document(usuario.uid)
+            .setData(datos, merge: true) { [weak self] error in
+                guard let self else { return }
+                if let error {
+                    print("No se pudo sincronizar el perfil en Firestore: \(error.localizedDescription)")
+                }
+
+                let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
+                sceneDelegate.mostrarPantallaPrincipal()
+            }
     }
 }

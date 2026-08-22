@@ -107,10 +107,31 @@ final class AgendarCitaViewController: UIViewController {
     private func presentacionMascota(_ mascota: Mascota) -> (detalle: String, imagen: UIImage, tieneFoto: Bool) {
         let peso = mascota.peso.map { " · \(String(format: "%.1f", $0)) kg" } ?? ""
         let foto = fotosRepository.imagen(mascotaId: mascota.id)
-        let imagen = foto
+        let imagen = foto.map { miniatura($0, tamano: CGSize(width: 44, height: 44)) }
             ?? UIImage(systemName: mascota.especie == "Gato" ? "cat.fill" : "pawprint.fill")
             ?? UIImage()
         return ("\(mascota.especie) · \(mascota.raza) · \(mascota.sexo)\(peso)", imagen, foto != nil)
+    }
+
+    private func miniatura(_ imagen: UIImage, tamano: CGSize) -> UIImage {
+        guard imagen.size.width > 0, imagen.size.height > 0 else { return UIImage() }
+
+        let escala = max(tamano.width / imagen.size.width, tamano.height / imagen.size.height)
+        let tamanoEscalado = CGSize(
+            width: imagen.size.width * escala,
+            height: imagen.size.height * escala
+        )
+        let origen = CGPoint(
+            x: (tamano.width - tamanoEscalado.width) / 2,
+            y: (tamano.height - tamanoEscalado.height) / 2
+        )
+
+        let formato = UIGraphicsImageRendererFormat.default()
+        formato.opaque = false
+        return UIGraphicsImageRenderer(size: tamano, format: formato).image { _ in
+            UIBezierPath(roundedRect: CGRect(origin: .zero, size: tamano), cornerRadius: 8).addClip()
+            imagen.draw(in: CGRect(origin: origen, size: tamanoEscalado))
+        }
     }
 
     private func mostrarEstadoSinMascotas(_ mensaje: String) {

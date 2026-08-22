@@ -172,7 +172,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOOKING-PET-BUTTON">
                                         <rect key="frame" x="0.0" y="36.333333333333329" width="361" height="48"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="BOOKING-PET-H"/>
+                                            <constraint firstAttribute="height" constant="64" id="BOOKING-PET-H"/>
                                         </constraints>
                                         <buttonConfiguration key="configuration" style="tinted" image="pawprint.fill" catalog="system" title="Cargando mascotas…"/>
                                     </button>
